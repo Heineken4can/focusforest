@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7dd3fc",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101122",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glass {
+            background: rgba(125, 211, 252, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+<style>
+        .glass {
+            background: rgba(125, 211, 252, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- Browser URL Bar Simulation -->
+<div class="sticky top-0 z-50 bg-background-dark/80 backdrop-blur-md border-b border-white/10 px-4 py-3">
+<div class="flex items-center gap-3 bg-white/5 rounded-full px-4 py-1.5 border border-white/5">
+<span class="material-symbols-outlined text-sm text-slate-400">lock</span>
+<span class="text-xs text-slate-300 truncate font-display">forest-focus.app</span>
+<div class="flex-1"></div>
+<span class="material-symbols-outlined text-sm text-slate-400">refresh</span>
+</div>
+</div>
+<!-- Header Section -->
+<header class="flex items-center justify-between p-6">
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(125,211,252,0.4)]">
+<span class="material-symbols-outlined text-white">forest</span>
+</div>
+<div>
+<h1 class="text-xl font-bold tracking-tight">집중의 숲</h1>
+<p class="text-[10px] text-primary font-bold uppercase tracking-widest">Focus Forest</p>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
+<span class="material-symbols-outlined text-slate-300">account_circle</span>
+</button>
+</header>
+<!-- Main Content Scroll Area -->
+<main class="flex-1 overflow-y-auto px-6 pb-24">
+<!-- Today's Highlight Card -->
+<section class="mb-8">
+<h2 class="text-sm font-semibold text-slate-400 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">stars</span>
+                오늘의 핵심 작업
+            </h2>
+<div class="glass rounded-xl overflow-hidden relative">
+<div class="h-40 w-full bg-gradient-to-br from-primary/20 via-primary/40 to-background-dark relative group" data-alt="Modern workspace with laptop and coffee" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDhh05jfR3ou1QK_C7jJxYxIdoTMJZXCRWy5a_TuI6jZbkq6zwtlb0-1xO8KUj4ij5PGofBYweH2v6gGInTOEnn0mi280wVWcirnM03nviDSBGmpHnv7rMg6rhsu1I450edOzYdlF3OFNP2UjKsYm-vkAApxzOjrQ_76IDMMR-sQzffxCk5TfcLTQAhAMMzE5R_KDZLE8NqyJIVIPO4GDbmhwbvZKhcQVRYxUZJDaY1wWpVC2IGfwnR75-Dqey7lI45EorkKPeUy1g'); background-size: cover; background-position: center;">
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent"></div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="text-lg font-bold text-white mb-1">UI 디자인 시스템 정립</h3>
+<p class="text-sm text-slate-400">Deep Work: Component Library</p>
+</div>
+<div class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold border border-primary/20">
+                            2시간 소요
+                        </div>
+</div>
+<button class="w-full bg-primary hover:bg-primary/90 text-slate-900 font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-all shadow-[0_4px_15px_rgba(125,211,252,0.3)]">
+<span class="material-symbols-outlined">play_arrow</span>
+                        세션 시작
+                    </button>
+</div>
+</div>
+</section>
+<!-- Stats Overview -->
+<section class="mb-8">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-sm font-semibold text-slate-400">나의 통계</h2>
+<span class="material-symbols-outlined text-slate-500">chevron_right</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="glass p-4 rounded-xl">
+<p class="text-xs text-slate-400 mb-1">오늘의 집중</p>
+<p class="text-xl font-bold text-primary">4.2h</p>
+</div>
+<div class="glass p-4 rounded-xl">
+<p class="text-xs text-slate-400 mb-1">성장한 나무</p>
+<p class="text-xl font-bold text-emerald-400">12그루</p>
+</div>
+</div>
+</section>
+<!-- Task List Filters -->
+<section class="mb-4">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-sm font-semibold text-slate-400">할 일 목록</h2>
+<button class="text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">add</span>
+<span class="text-xs font-bold">추가</span>
+</button>
+</div>
+<div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+<button class="bg-primary text-slate-900 px-4 py-1.5 rounded-full text-xs font-medium shrink-0">전체</button>
+<button class="bg-white/5 border border-white/10 text-slate-300 px-4 py-1.5 rounded-full text-xs font-medium shrink-0">높은 우선순위</button>
+<button class="bg-white/5 border border-white/10 text-slate-300 px-4 py-1.5 rounded-full text-xs font-medium shrink-0">진행 중</button>
+<button class="bg-white/5 border border-white/10 text-slate-300 px-4 py-1.5 rounded-full text-xs font-medium shrink-0">대기</button>
+</div>
+</section>
+<!-- Tasks -->
+<div class="space-y-3">
+<div class="glass p-4 rounded-xl flex items-center gap-4 group">
+<div class="w-6 h-6 rounded border-2 border-primary/40 flex items-center justify-center shrink-0"></div>
+<div class="flex-1">
+<p class="text-sm font-medium">백엔드 API 보안 검토</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[10px] text-red-400 font-bold uppercase">긴급</span>
+<span class="text-[10px] text-slate-500 flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px]">schedule</span> 14:00
+                        </span>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-600">more_vert</span>
+</div>
+<div class="glass p-4 rounded-xl flex items-center gap-4 opacity-70">
+<div class="w-6 h-6 rounded bg-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-slate-900 text-xs">check</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-medium line-through">모닝 루틴: 명상 10분</p>
+<p class="text-[10px] text-slate-500 mt-1">완료됨</p>
+</div>
+<span class="material-symbols-outlined text-slate-600">more_vert</span>
+</div>
+<div class="glass p-4 rounded-xl flex items-center gap-4">
+<div class="w-6 h-6 rounded border-2 border-slate-700 flex items-center justify-center shrink-0"></div>
+<div class="flex-1">
+<p class="text-sm font-medium">디자인 피드백 정리</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[10px] text-yellow-500 font-bold uppercase">보통</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-600">more_vert</span>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 glass border-t border-white/10 px-6 py-4 rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.4)]">
+<div class="flex items-center justify-between max-w-md mx-auto">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined font-variation-fill text-2xl">home</span>
+<span class="text-[10px] font-bold">홈</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-slate-300" href="#">
+<span class="material-symbols-outlined text-2xl">bar_chart</span>
+<span class="text-[10px] font-bold">통계</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-slate-300" href="#">
+<span class="material-symbols-outlined text-2xl">forest</span>
+<span class="text-[10px] font-bold">숲</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-slate-300" href="#">
+<span class="material-symbols-outlined text-2xl">settings</span>
+<span class="text-[10px] font-bold">설정</span>
+</a>
+</div>
+</nav>
+<style>
+        .glass {
+            background: rgba(125, 211, 252, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</body></html>

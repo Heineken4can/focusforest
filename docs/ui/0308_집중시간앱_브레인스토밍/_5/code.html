@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2536f4",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101122",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .timer-glow {
+            text-shadow: 0 0 40px rgba(37, 54, 244, 0.3);
+        }
+        .sidebar-blur {
+            backdrop-filter: blur(12px);
+        }
+    </style>
+<style>
+        .timer-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.8s ease-in-out;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 12px rgba(37, 54, 244, 0.4));
+        }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+        .timer-bg-pulse {
+            animation: pulse-slow 4s ease-in-out infinite;
+        }
+    </style></head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased overflow-hidden">
+<div class="flex h-screen w-full overflow-hidden">
+<!-- Left Side Navigation (Minimized/Icon Style) -->
+<aside class="w-20 flex flex-col items-center py-8 border-r border-slate-200/10 bg-background-light dark:bg-background-dark">
+<div class="mb-10">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-white">bolt</span>
+</div>
+</div>
+<nav class="flex flex-col gap-8">
+<a class="text-primary" href="#">
+<span class="material-symbols-outlined text-3xl">timer</span>
+</a>
+<a class="text-slate-400 hover:text-slate-100 transition-colors" href="#">
+<span class="material-symbols-outlined text-3xl">list_alt</span>
+</a>
+<a class="text-slate-400 hover:text-slate-100 transition-colors" href="#">
+<span class="material-symbols-outlined text-3xl">bar_chart</span>
+</a>
+<a class="text-slate-400 hover:text-slate-100 transition-colors" href="#">
+<span class="material-symbols-outlined text-3xl">settings</span>
+</a>
+</nav>
+<div class="mt-auto">
+<div class="w-10 h-10 rounded-full border-2 border-primary/30 p-0.5">
+<img alt="사용자 프로필" class="rounded-full" data-alt="User profile avatar image" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtinn2CTyK0sfffgaemll0QwBNDuGn-G9zkDOd7WA7Fv5PTah3EbCSWIEAeg1mkpqhv5iyjrVpbdMqLPvJe2bcQ5Z2SniCFjP_LiZidJ5JYgdYAJmsZ2sfC3iIRDkBgncq0iaRijJ3z4Ip4tVLCqyu60d2UtpP0XopnGjs3hA7XpGA5cimLdZqSy3YC-trLtsMEQg_aq2MBW9Zw5muzGaDkoUVAAKjYTZZZnNUf8QyVANokv7kXkpmNyuze-6OFgDay83bTsOcIKk"/>
+</div>
+</div>
+</aside>
+<!-- Main Immersive Timer Area -->
+<main class="flex-1 relative flex flex-col items-center justify-center p-8 bg-gradient-to-br from-background-dark via-background-dark to-primary/5">
+<!-- Background Decorative Element -->
+<div class="absolute inset-0 overflow-hidden pointer-events-none">
+<div class="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 rounded-full blur-[120px]"></div>
+<div class="absolute -bottom-24 -left-24 w-96 h-96 bg-primary/5 rounded-full blur-[100px]"></div>
+</div>
+<!-- Central Timer Content -->
+<div class="relative z-10 flex flex-col text-center items-center">
+<div class="mb-4">
+<span class="px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-semibold tracking-wider uppercase">Deep Focus Mode</span>
+</div>
+<h2 class="text-2xl font-medium text-slate-400 mb-8">UI 디자인 시스템 정립</h2>
+<div class="timer-container select-none mb-8">
+<!-- Background Pulse Glow -->
+<div class="absolute inset-0 bg-primary/5 rounded-full blur-3xl timer-bg-pulse"></div>
+<!-- Circular Progress SVG -->
+<svg class="progress-ring" height="360" width="360">
+<!-- Background Track -->
+<circle class="text-slate-800" cx="180" cy="180" fill="transparent" r="160" stroke="currentColor" stroke-width="12"></circle>
+<!-- Progress Bar (Value at ~80% for visual) -->
+<circle class="progress-ring__circle text-primary" cx="180" cy="180" fill="transparent" r="160" stroke="currentColor" stroke-dasharray="1005.31" stroke-dashoffset="201.06" stroke-width="12"></circle>
+</svg>
+<!-- Center Indicator (Optional subtle dot or icon) -->
+<div class="absolute">
+<div class="w-4 h-4 rounded-full bg-primary shadow-[0_0_15px_rgba(37,54,244,0.8)]"></div>
+</div>
+</div>
+<div class="flex gap-8 mt-8">
+<button class="w-20 h-20 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/40 hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-white text-4xl" style="font-variation-settings: 'FILL' 1">play_arrow</span>
+</button>
+<button class="w-20 h-20 rounded-full border border-slate-700 bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-slate-300 text-3xl">refresh</span>
+</button>
+<button class="w-20 h-20 rounded-full border border-slate-700 bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-slate-300 text-3xl">skip_next</span>
+</button>
+</div>
+</div>
+<!-- Quote/Affirmation Bottom -->
+<div class="absolute bottom-12 text-slate-500 font-medium italic">
+                "완벽함보다는 완료를 목표로 하세요."
+            </div>
+</main>
+<!-- Right Sidebar (Task Details) -->
+<aside class="w-96 bg-slate-50 dark:bg-slate-900/50 sidebar-blur border-l border-slate-200/10 p-8 flex flex-col">
+<div class="flex items-center justify-between mb-10">
+<h3 class="text-xl font-bold">작업 세션</h3>
+<button class="p-2 rounded-lg hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<!-- Current Session Progress -->
+<div class="mb-10">
+<div class="flex justify-between items-end mb-4">
+<div>
+<p class="text-sm text-slate-400 mb-1">오늘의 목표</p>
+<p class="text-2xl font-bold">4 / 8 <span class="text-sm font-normal text-slate-500">시간</span></p>
+</div>
+<p class="text-primary font-bold">50%</p>
+</div>
+<div class="h-2 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 50%"></div>
+</div>
+</div>
+<!-- Active Task Details -->
+<div class="mb-10 bg-primary/5 rounded-2xl p-6 border border-primary/20">
+<h4 class="text-primary font-bold text-sm mb-3">현재 작업 중</h4>
+<p class="text-lg font-semibold mb-2 leading-snug">UI 디자인 시스템 정립 및 컴포넌트 라이브러리 구축</p>
+<div class="flex items-center gap-2 text-slate-400 text-sm">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span>14:00 - 15:30 (90분)</span>
+</div>
+</div>
+<!-- Upcoming Tasks -->
+<div class="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+<div class="flex items-center justify-between mb-4">
+<h4 class="font-bold text-slate-400">다음 작업</h4>
+<button class="text-primary text-sm font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">add</span> 추가
+                    </button>
+</div>
+<div class="space-y-4">
+<!-- Task Item 1 -->
+<div class="group flex items-start gap-4 p-4 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-slate-800">
+<div class="mt-1">
+<span class="material-symbols-outlined text-slate-600 group-hover:text-primary transition-colors cursor-pointer">check_circle</span>
+</div>
+<div class="flex-1">
+<p class="font-medium text-slate-300">사용자 인터뷰 결과 정리</p>
+<p class="text-xs text-slate-500 mt-1">프로젝트: 리서치</p>
+</div>
+<span class="text-xs font-medium text-slate-600">30분</span>
+</div>
+<!-- Task Item 2 -->
+<div class="group flex items-start gap-4 p-4 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-slate-800">
+<div class="mt-1">
+<span class="material-symbols-outlined text-slate-600 group-hover:text-primary transition-colors cursor-pointer">check_circle</span>
+</div>
+<div class="flex-1">
+<p class="font-medium text-slate-300">이메일 피드백 확인</p>
+<p class="text-xs text-slate-500 mt-1">프로젝트: 커뮤니케이션</p>
+</div>
+<span class="text-xs font-medium text-slate-600">15분</span>
+</div>
+<!-- Task Item 3 -->
+<div class="group flex items-start gap-4 p-4 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-slate-800 opacity-60">
+<div class="mt-1">
+<span class="material-symbols-outlined text-slate-600 group-hover:text-primary transition-colors cursor-pointer">check_circle</span>
+</div>
+<div class="flex-1">
+<p class="font-medium text-slate-300">팀 주간 회의 준비</p>
+<p class="text-xs text-slate-500 mt-1">프로젝트: 경영</p>
+</div>
+<span class="text-xs font-medium text-slate-600">45분</span>
+</div>
+</div>
+</div>
+<!-- Session Stats Footer -->
+<div class="pt-6 border-t border-slate-200/10 mt-6 grid grid-cols-2 gap-4">
+<div class="text-center">
+<p class="text-xs text-slate-500">완료된 세션</p>
+<p class="text-xl font-bold">12</p>
+</div>
+<div class="text-center">
+<p class="text-xs text-slate-500">오늘의 집중</p>
+<p class="text-xl font-bold">4.2h</p>
+</div>
+</div>
+</aside>
+</div>
+<!-- Background Decoration Overlay (Grain/Noise effect if desired via CSS only) -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] mix-blend-overlay">
+<svg viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+<filter id="noiseFilter">
+<feturbulence basefrequency="0.65" numoctaves="3" stitchtiles="stitch" type="fractalNoise"></feturbulence>
+</filter>
+<rect filter="url(#noiseFilter)" height="100%" width="100%"></rect>
+</svg>
+</div>
+</body></html>

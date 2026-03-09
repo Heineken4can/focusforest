@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Forest - 대시보드 (Toss Style)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable.css" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Pretendard Variable"', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        toss: {
+                            bg: '#0B0E14',
+                            surface: '#181B23',
+                            surfaceHover: '#222631',
+                            selected: '#1E2D4A',   /* [fix T-1/C-3] 선택 상태 전용 토큰 추가 */
+                            blue: '#3182F6',
+                            green: '#1AC97E',   /* [fix T-2] Success 컬러 추가 */
+                            red: '#F04452',
+                            textMain: '#F2F4F6',
+                            textSub: '#8B95A1',
+                            divider: '#2A2D36',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: theme('fontFamily.sans');
+            background-color: #0B0E14;
+            color: #F2F4F6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+    </style>
+</head>
+
+<body class="flex h-screen overflow-hidden antialiased">
+
+    <!-- ========================================
+         SIDEBAR : Desktop lg+ 전체 사이드바
+                   Tablet md: 아이콘 전용 좁은 바
+                   Mobile sm: 완전히 숨김 (Bottom Nav로 대체)
+         ======================================== -->
+    <aside class="
+        hidden sm:flex                /* 모바일에선 숨김 */
+        sm:w-16 lg:w-64               /* 태블릿 아이콘 전용 / 데스크탑 전체 폭 */
+        flex-col
+        bg-toss-surface border-r border-toss-divider
+        pt-8 pb-6
+        sm:px-2 lg:px-4              /* 태블릿: 좁은 패딩 / 데스크탑: 넓은 패딩 */
+        transition-all duration-300
+    ">
+        <!-- 로고 -->
+        <div class="flex items-center gap-3 mb-10 sm:justify-center lg:justify-start sm:px-0 lg:px-4">
+            <div class="w-8 h-8 rounded-full bg-toss-blue flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-rounded text-white text-lg">forest</span>
+            </div>
+            <h1 class="sm:hidden lg:block text-xl font-bold tracking-tight">집중의 숲</h1>
+        </div>
+
+        <nav class="flex-1 space-y-2">
+            <!-- Active -->
+            <a href="#"
+                class="flex items-center gap-3 sm:justify-center lg:justify-start sm:px-3 lg:px-4 py-3 rounded-2xl bg-toss-selected text-toss-blue font-semibold transition-colors border-l-2 border-toss-blue">
+                <span class="material-symbols-rounded text-xl flex-shrink-0">home</span>
+                <span class="sm:hidden lg:block">홈</span>
+            </a>
+            <a href="#"
+                class="flex items-center gap-3 sm:justify-center lg:justify-start sm:px-3 lg:px-4 py-3 rounded-2xl text-toss-textSub hover:bg-toss-surfaceHover hover:text-toss-textMain font-medium transition-colors duration-150">
+                <span class="material-symbols-rounded text-xl flex-shrink-0">bar_chart</span>
+                <span class="sm:hidden lg:block">리포트</span>
+            </a>
+            <a href="#"
+                class="flex items-center gap-3 sm:justify-center lg:justify-start sm:px-3 lg:px-4 py-3 rounded-2xl text-toss-textSub hover:bg-toss-surfaceHover hover:text-toss-textMain font-medium transition-colors duration-150">
+                <span class="material-symbols-rounded text-xl flex-shrink-0">local_library</span>
+                <span class="sm:hidden lg:block">나의 숲</span>
+            </a>
+        </nav>
+
+        <!-- User Profile -->
+        <div class="mt-auto">
+            <div
+                class="flex items-center gap-3 sm:justify-center lg:justify-start sm:px-2 lg:px-4 py-3 rounded-2xl hover:bg-toss-surfaceHover cursor-pointer transition-colors duration-150">
+                <div class="w-10 h-10 rounded-full bg-toss-bg overflow-hidden flex-shrink-0">
+                    <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=e3e4e8"
+                        alt="User Avatar" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1 min-w-0 sm:hidden lg:block">
+                    <p class="text-sm font-semibold truncate text-toss-textMain">LV.1 숲지기</p>
+                    <p class="text-xs font-medium truncate" style="color: #1AC97E">2,400 SP</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ========================================
+         MAIN CONTENT
+         ======================================== -->
+    <main class="flex-1 flex flex-col h-full bg-toss-bg overflow-y-auto">
+
+        <!-- Top Header -->
+        <header
+            class="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-6 sticky top-0 bg-toss-bg/90 backdrop-blur z-10 border-b border-toss-divider">
+            <h2 class="text-2xl font-bold">홈</h2>
+            <div class="flex items-center gap-4 text-toss-textSub">
+                <button class="hover:text-toss-textMain transition-colors duration-150"><span
+                        class="material-symbols-rounded">search</span></button>
+                <button class="hover:text-toss-textMain transition-colors duration-150 relative">
+                    <span class="material-symbols-rounded">notifications</span>
+                    <span class="absolute top-0 right-0 w-2 h-2 bg-toss-red rounded-full"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full space-y-8 lg:space-y-12">
+
+            <!-- Hero: Current Focus Task -->
+            <section
+                class="bg-toss-surface rounded-2xl p-6 lg:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border border-toss-divider">
+                <div class="flex-1">
+                    <p class="text-toss-blue font-bold tracking-tight mb-2 text-sm">현재 집중할 과제</p>
+                    <h3 class="text-2xl lg:text-3xl font-extrabold mb-3 lg:mb-4 leading-snug">
+                        UI 디자인 시스템<br />완료하기
+                    </h3>
+                    <p class="text-toss-textSub font-medium mb-5 lg:mb-6">최근 몰입: 2시간 전</p>
+                    <button
+                        class="bg-toss-blue hover:bg-blue-600 text-white font-bold py-3.5 px-8 rounded-2xl transition-all duration-150 shadow-[0_4px_14px_0_rgba(49,130,246,0.39)] w-full sm:w-auto disabled:opacity-40 disabled:pointer-events-none disabled:shadow-none">
+                        집중 시작하기
+                    </button>
+                </div>
+                <div
+                    class="hidden md:flex w-32 h-32 lg:w-40 lg:h-40 bg-toss-bg rounded-full border-[6px] border-toss-divider flex-col items-center justify-center relative flex-shrink-0">
+                    <svg class="absolute inset-0 w-full h-full -rotate-90">
+                        <circle cx="50%" cy="50%" r="46%" stroke="#3182F6" stroke-width="5%" fill="transparent"
+                            stroke-dasharray="289" stroke-dashoffset="93"
+                            class="transition-all duration-1000 ease-in-out"></circle>
+                    </svg>
+                    <span class="text-2xl lg:text-3xl font-extrabold tabular-nums">25:00</span>
+                </div>
+            </section>
+
+            <!-- To-do List -->
+            <section>
+                <div class="flex items-center justify-between mb-5 lg:mb-6 px-1">
+                    <h3 class="text-xl font-bold">오늘의 할 일 <span class="text-toss-textSub ml-1 font-semibold">12</span>
+                    </h3>
+                    <button class="text-toss-blue font-semibold text-sm hover:underline">추가하기</button>
+                </div>
+
+                <div class="bg-toss-surface rounded-2xl overflow-hidden border border-toss-divider">
+                    <!-- List: Default -->
+                    <div
+                        class="flex items-center gap-4 p-4 lg:p-5 hover:bg-toss-surfaceHover cursor-pointer transition-colors duration-150 border-b border-toss-divider group">
+                        <div
+                            class="w-10 h-10 rounded-full bg-toss-bg flex items-center justify-center text-toss-textSub group-hover:text-toss-blue transition-colors flex-shrink-0">
+                            <span class="material-symbols-rounded">circle</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-base lg:text-lg font-bold truncate">주간 리포트 작성</h4>
+                            <p class="text-sm text-toss-textSub font-medium mt-0.5">Marketing • 오후 3:00</p>
+                        </div>
+                        <span
+                            class="material-symbols-rounded text-toss-textSub hover:text-toss-textMain flex-shrink-0">more_vert</span>
+                    </div>
+
+                    <!-- List: Selected [fix C-3] - bg-toss-selected 사용 -->
+                    <div
+                        class="flex items-center gap-4 p-4 lg:p-5 bg-toss-selected cursor-pointer transition-colors duration-150 border-b border-toss-divider border-l-2 border-l-toss-blue">
+                        <div
+                            class="w-10 h-10 rounded-full bg-toss-bg flex items-center justify-center text-toss-blue flex-shrink-0">
+                            <span class="material-symbols-rounded">check_circle</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-base lg:text-lg font-bold truncate">UI 디자인 시스템 완료하기</h4>
+                            <p class="text-sm text-toss-blue font-semibold mt-0.5">Design • 핵심 과제</p>
+                        </div>
+                        <span class="material-symbols-rounded text-toss-textSub flex-shrink-0">more_vert</span>
+                    </div>
+
+                    <!-- List: Completed -->
+                    <div
+                        class="flex items-center gap-4 p-4 lg:p-5 cursor-not-allowed transition-colors duration-150 opacity-40 grayscale pointer-events-none">
+                        <div
+                            class="w-10 h-10 rounded-full bg-toss-bg flex items-center justify-center text-toss-green flex-shrink-0">
+                            <span class="material-symbols-rounded">task_alt</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-base lg:text-lg font-bold text-toss-textSub line-through truncate">아침 운동 및
+                                명상</h4>
+                            <p class="text-sm text-toss-textSub font-medium mt-0.5">Personal • 오전 7:00</p>
+                        </div>
+                        <!-- [fix T-2] Success 컬러 적용 -->
+                        <span class="text-sm font-bold flex-shrink-0" style="color:#1AC97E">+ 100 SP</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mini Widgets -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+                <div
+                    class="bg-toss-surface p-4 lg:p-5 rounded-2xl flex flex-col justify-between h-28 lg:h-32 border border-toss-divider hover:bg-toss-surfaceHover cursor-pointer transition-colors duration-150">
+                    <span class="material-symbols-rounded text-toss-textSub">timer</span>
+                    <div>
+                        <p class="text-xs lg:text-sm text-toss-textSub font-medium">총 집중 시간</p>
+                        <p class="text-base lg:text-lg font-bold">2.5 시간</p>
+                    </div>
+                </div>
+                <div
+                    class="bg-toss-surface p-4 lg:p-5 rounded-2xl flex flex-col justify-between h-28 lg:h-32 border border-toss-divider hover:bg-toss-surfaceHover cursor-pointer transition-colors duration-150">
+                    <span class="material-symbols-rounded text-toss-textSub">psychology</span>
+                    <div>
+                        <p class="text-xs lg:text-sm text-toss-textSub font-medium">몰입 완료</p>
+                        <p class="text-base lg:text-lg font-bold">4 세션</p>
+                    </div>
+                </div>
+                <!-- [fix T-2] Success 컬러(toss-green) 활용 -->
+                <div class="bg-toss-surface p-4 lg:p-5 rounded-2xl flex flex-col justify-between h-28 lg:h-32 border hover:cursor-pointer transition-colors duration-150"
+                    style="border-color:rgba(26,201,126,0.25)">
+                    <span class="material-symbols-rounded" style="color:#1AC97E">forest</span>
+                    <div>
+                        <p class="text-xs lg:text-sm font-semibold" style="color:#1AC97E">심은 나무</p>
+                        <p class="text-base lg:text-lg font-bold">12 그루</p>
+                    </div>
+                </div>
+                <div
+                    class="bg-toss-surface p-4 lg:p-5 rounded-2xl flex flex-col items-center justify-center h-28 lg:h-32 border border-toss-divider border-dashed hover:bg-toss-surfaceHover cursor-pointer transition-colors duration-150 text-toss-textSub hover:text-toss-textMain">
+                    <span class="material-symbols-rounded mb-1">add</span>
+                    <p class="text-xs lg:text-sm font-semibold">포인트 샵</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ========================================
+         BOTTOM NAV : 모바일 전용 (sm 미만에서 표시)
+         ======================================== -->
+    <nav
+        class="sm:hidden fixed bottom-0 left-0 right-0 bg-toss-surface border-t border-toss-divider flex justify-around items-center px-4 py-3 z-50">
+        <a href="#" class="flex flex-col items-center gap-1 text-toss-blue">
+            <span class="material-symbols-rounded text-xl">home</span>
+            <span class="text-[10px] font-semibold">홈</span>
+        </a>
+        <a href="#" class="flex flex-col items-center gap-1 text-toss-textSub">
+            <span class="material-symbols-rounded text-xl">bar_chart</span>
+            <span class="text-[10px] font-medium">리포트</span>
+        </a>
+        <a href="#" class="flex flex-col items-center gap-1 text-toss-textSub">
+            <span class="material-symbols-rounded text-xl">local_library</span>
+            <span class="text-[10px] font-medium">나의 숲</span>
+        </a>
+        <a href="#" class="flex flex-col items-center gap-1 text-toss-textSub">
+            <span class="material-symbols-rounded text-xl">person</span>
+            <span class="text-[10px] font-medium">프로필</span>
+        </a>
+    </nav>
+
+</body>
+
+</html>

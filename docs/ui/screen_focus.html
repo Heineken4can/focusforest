@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Focus Forest 화면정의서 - 집중 모드 (SCR-04~08)</title>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <link rel="stylesheet" href="./base.css">
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <a class="chip" href="./index.html">화면 목록으로</a>
+      <h1 class="mt-space-4">집중 모드 그룹</h1>
+      <p class="muted">SCR-04 진행, SCR-05 일시정지, SCR-06 포기 경고, SCR-07 휴식, SCR-08 보상 상태를 한 파일에서 연속 검토합니다.</p>
+    </section>
+
+    <section class="section" id="scr-04">
+      <div class="section-header">
+        <div>
+          <span class="chip">SCR-04</span>
+          <h2>집중 모드 - 타이머 진행</h2>
+          <p class="muted">실시간 타이머는 `aria-live="polite"` 영역 안에서 표시하며, 데스크톱에서는 좌우 레일을 Read Only로 유지합니다.</p>
+        </div>
+      </div>
+      <div class="section-body preview-grid">
+        <div>
+          <div class="preview-label"><span>Desktop</span><span class="chip">Read Only Rails</span></div>
+          <div class="frame">
+            <div class="layout">
+              <aside class="sidebar slim" aria-hidden="true">
+                <div class="mark"><span class="material-symbols-rounded">forest</span></div>
+                <span class="material-symbols-rounded">home</span>
+                <span class="material-symbols-rounded" style="color:var(--toss-text-main);">timer</span>
+              </aside>
+              <main class="main timer-shell">
+                <div class="timer-stack">
+                  <span class="chip">진행 중</span>
+                  <h2 class="title-lg timer-title">UI 디자인 시스템 완료하기</h2>
+                  <p class="muted">Design · 핵심 과제</p>
+                  <div class="ring" aria-live="polite" aria-label="집중 타이머">
+                    <div>
+                      <div class="timer-text">15:00</div>
+                      <div class="timer-sub">/ 25:00</div>
+                    </div>
+                  </div>
+                  <div class="action-row">
+                    <button class="btn"><span class="material-symbols-rounded btn-danger-icon">stop_circle</span><span>포기하기</span></button>
+                    <button class="btn-primary"><span class="material-symbols-rounded">pause</span><span>일시정지</span></button>
+                  </div>
+                </div>
+              </main>
+              <aside class="sidebar-right-dimmed" aria-label="다른 작업 목록 (집중 모드 중 비활성)">
+                <div class="profile-grid">
+                  <div class="box"><span>주간 리포트 작성</span><span class="material-symbols-rounded muted">circle</span></div>
+                  <div class="box"><span>회원가입 플로우 정리</span><span class="material-symbols-rounded muted">circle</span></div>
+                </div>
+                <p class="muted" style="text-align:center;">집중 모드 중에는 다른 작업을 할 수 없어요</p>
+              </aside>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="preview-label"><span>Mobile</span><span class="chip">Focused</span></div>
+          <div class="frame mobile">
+            <main class="main timer-shell">
+              <div class="timer-stack mobile-stack-clearance">
+                <span class="chip">진행 중</span>
+                <h2 class="title-lg timer-title">UI 디자인 시스템 완료하기</h2>
+                <p class="muted">외부 탐색 없이 한 작업만 유지</p>
+                <div class="ring" aria-live="polite" aria-label="집중 타이머">
+                  <div>
+                    <div class="timer-text">15:00</div>
+                    <div class="timer-sub">/ 25:00</div>
+                  </div>
+                </div>
+              </div>
+            </main>
+            <div class="mobile-bar" role="toolbar" aria-label="세션 컨트롤">
+              <button class="btn" style="flex:1;"><span class="material-symbols-rounded btn-danger-icon">stop_circle</span><span>포기</span></button>
+              <button class="btn-primary" style="flex:1.4;"><span class="material-symbols-rounded">pause</span><span>일시정지</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="scr-05">
+      <div class="section-header">
+        <div>
+          <span class="chip warning">SCR-05</span>
+          <h2>집중 모드 - 일시정지 / 자동 취소 경고</h2>
+          <p class="muted">Pause 상태는 경고 배지와 토스트로 표현하고, 다시 시작과 포기 액션을 동시에 제공합니다.</p>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="frame">
+          <main class="main timer-shell">
+            <div class="timer-stack">
+              <span class="chip warning">일시정지</span>
+              <h2 class="title-lg timer-title">잠시 멈춘 상태예요</h2>
+              <p class="muted">5분 이상 멈추면 세션이 자동 취소됩니다.</p>
+              <div class="ring" aria-live="polite" aria-label="일시정지 타이머">
+                <div>
+                  <div class="timer-text">15:00</div>
+                  <div class="timer-sub">Paused</div>
+                </div>
+              </div>
+              <div class="action-row">
+                <button class="btn-surface">포기하기</button>
+                <button class="btn-primary">다시 시작</button>
+              </div>
+              <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span class="material-symbols-rounded">warning</span>
+                  <span>자동 취소까지 00:42 남았어요</span>
+                </div>
+                <span class="chip warning">주의</span>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="scr-06">
+      <div class="section-header">
+        <div>
+          <span class="chip danger">SCR-06</span>
+          <h2>집중 모드 - 포기 경고 모달</h2>
+          <p class="muted">데스크톱은 센터 모달, 모바일은 Bottom Sheet로 포기 확인을 노출합니다.</p>
+        </div>
+      </div>
+      <div class="section-body preview-grid">
+        <div>
+          <div class="preview-label"><span>Desktop</span><span class="chip danger">Center Modal</span></div>
+          <div class="frame">
+            <div class="overlay">
+              <div class="modal">
+                <div class="mark" style="background:rgb(var(--toss-red-rgb) / 0.12);color:var(--toss-text-main);margin-bottom:16px;"><span class="material-symbols-rounded">warning</span></div>
+                <h2>정말 포기할까요?</h2>
+                <p class="muted mt-space-3">지금 포기하면 현재 세션 기록이 저장되지 않고 보상도 받을 수 없어요.</p>
+                <div class="modal-actions">
+                  <button class="btn-surface">계속 집중할래요</button>
+                  <button class="btn"><span class="material-symbols-rounded btn-danger-icon">stop_circle</span><span>포기하기</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="preview-label"><span>Mobile</span><span class="chip danger">Bottom Sheet</span></div>
+          <div class="frame mobile">
+            <div class="overlay bottom">
+              <div class="modal sheet">
+                <div class="mark" style="background:rgb(var(--toss-red-rgb) / 0.12);color:var(--toss-text-main);margin-bottom:16px;"><span class="material-symbols-rounded">error</span></div>
+                <h2>포기 시 진행 기록이 사라져요</h2>
+                <p class="muted mt-space-3">잠깐 멈춘 상태라면 다시 시작을 권장합니다.</p>
+                <div class="modal-actions">
+                  <button class="btn-primary">다시 시작</button>
+                  <button class="btn"><span class="material-symbols-rounded btn-danger-icon">stop_circle</span><span>포기</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="scr-07">
+      <div class="section-header">
+        <div>
+          <span class="chip success">SCR-07</span>
+          <h2>집중 모드 - 휴식(Break)</h2>
+          <p class="muted">집중 완료 후 이어지는 5분 휴식 화면입니다. 건너뛰기가 다음 진행으로 넘어가는 기본 액션이며, 휴식 유지는 보조 액션입니다.</p>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="frame">
+          <main class="main timer-shell break">
+            <div class="timer-stack">
+              <span class="chip success">휴식 시간</span>
+              <h2 class="title-lg timer-title">잘했어요. 이제 잠깐 쉬어요</h2>
+              <p class="muted">남은 휴식 시간은 05:00</p>
+              <div class="ring" aria-live="polite" aria-label="휴식 타이머" style="border-color:rgb(var(--toss-green-rgb) / 0.18);">
+                <div>
+                  <div class="timer-text">05:00</div>
+                  <div class="timer-sub">Break</div>
+                </div>
+              </div>
+              <div class="action-row">
+                <button class="btn-primary">건너뛰기</button>
+                <button class="btn-surface">휴식 유지</button>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="scr-08">
+      <div class="section-header">
+        <div>
+          <span class="chip success">SCR-08</span>
+          <h2>완료 및 보상 화면</h2>
+          <p class="muted">축하 모달과 함께 보상 획득을 단순하고 명확하게 전달합니다.</p>
+        </div>
+      </div>
+      <div class="section-body preview-grid">
+        <div>
+          <div class="preview-label"><span>Desktop</span><span class="chip success">Reward</span></div>
+          <div class="frame">
+            <div class="overlay">
+              <div class="modal">
+                <div class="mark" style="background:rgb(var(--toss-green-rgb) / 0.12);color:var(--toss-text-main);margin-bottom:16px;"><span class="material-symbols-rounded">celebration</span></div>
+                <h2>100 SP를 획득했어요</h2>
+                <p class="muted mt-space-3">25분 집중 세션을 완료했고, 오늘의 숲에 나무 한 그루가 심어졌습니다.</p>
+                <div class="modal-actions single">
+                  <button class="btn-primary">대시보드로 돌아가기</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="preview-label"><span>Loading Example</span><span class="chip">State</span></div>
+          <div class="frame mobile">
+            <div class="overlay bottom">
+              <div class="modal sheet">
+                <span class="chip">동기화 중</span>
+                <h2 class="mt-space-4">세션 결과를 저장하는 중</h2>
+                <p class="muted mt-space-3">보상 지급과 기록 저장이 끝나면 자동으로 이동합니다.</p>
+                <div class="modal-actions single">
+                  <button class="btn-primary pulse" type="button" disabled aria-busy="true"><span class="spinner" aria-hidden="true"></span><span class="status-loading">저장 중...</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

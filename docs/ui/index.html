@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Focus Forest 화면정의서 - Index</title>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <link rel="stylesheet" href="./base.css">
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <h1>Focus Forest 화면정의서</h1>
+      <p class="muted">
+        `screen_html_rv8.md` 기준으로 상태, 접근성, 간격 토큰 정리를 반영한 퍼블리싱 인덱스입니다.
+        대시보드, 집중 모드, 계정/설정 3개 그룹을 동일한 토큰 체계와 Loading/A11y 규칙으로 검토할 수 있게 구성했습니다.
+      </p>
+    </section>
+
+    <section class="summary-grid">
+      <article class="section">
+        <div class="section-header">
+          <div>
+            <h2>퍼블리싱 기준</h2>
+            <p class="muted">`design_system.md v1.6` 준수 항목</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <ul class="muted">
+            <li>공식 토큰 네이밍 `--toss-*` 사용</li>
+            <li>`toss-blue`는 CTA 배경과 인디케이터에만 사용</li>
+            <li>Disabled, Loading, Error, Hover 상태를 화면에 명시</li>
+            <li>아이콘 버튼 `aria-label`, 타이머 `aria-live`, 스위치 `role="switch"` 반영</li>
+            <li>알림 버튼 `aria-label`은 `알림`으로 통일</li>
+            <li>로컬 모드 진입 버튼은 안내 문구와 Loading 예시를 함께 제공</li>
+            <li>자동 취소 토스트와 카운트다운은 live region으로 안내</li>
+            <li>비동기 Loading 버튼은 스피너와 함께 `disabled`로 고정</li>
+            <li>브레이크포인트는 640px / 1024px 기준으로 정렬</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="section">
+        <div class="section-header">
+          <div>
+            <h2>파일 목록</h2>
+            <p class="muted">검토와 핸드오프를 위한 분할 구조</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="profile-grid">
+            <a class="box" href="./screen_dashboard.html#scr-01">
+              <div>
+                <strong>screen_dashboard.html</strong>
+                <div class="muted">SCR-01, SCR-02, SCR-03</div>
+              </div>
+              <span class="chip">Dashboard</span>
+            </a>
+            <a class="box" href="./screen_focus.html#scr-04">
+              <div>
+                <strong>screen_focus.html</strong>
+                <div class="muted">SCR-04 ~ SCR-08</div>
+              </div>
+              <span class="chip warning">Focus</span>
+            </a>
+            <a class="box" href="./screen_auth.html#scr-09">
+              <div>
+                <strong>screen_auth.html</strong>
+                <div class="muted">SCR-09, SCR-10</div>
+              </div>
+              <span class="chip success">Account</span>
+            </a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2>화면 목록</h2>
+          <p class="muted">`screen_design.md` 기준 전체 스코프</p>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="dual-grid">
+          <div class="widget">
+            <div>
+              <div class="chip">SCR-01 ~ SCR-03</div>
+              <h3 class="title-lg mt-space-3">대시보드 그룹</h3>
+            </div>
+            <p class="muted">Empty State, 기본 목록, 핵심 과제 선택 상태를 한 파일에서 비교 검토합니다.</p>
+            <a class="btn-primary" href="./screen_dashboard.html#scr-01">대시보드 보기</a>
+          </div>
+          <div class="widget">
+            <div>
+              <div class="chip warning">SCR-04 ~ SCR-08</div>
+              <h3 class="title-lg mt-space-3">집중 모드 그룹</h3>
+            </div>
+            <p class="muted">진행, 일시정지, 포기 경고, 휴식, 보상까지 세션 전체 상태 흐름을 한 파일로 묶었습니다.</p>
+            <a class="btn-primary" href="./screen_focus.html#scr-04">집중 모드 보기</a>
+          </div>
+          <div class="widget">
+            <div>
+              <div class="chip success">SCR-09 ~ SCR-10</div>
+              <h3 class="title-lg mt-space-3">계정 그룹</h3>
+            </div>
+            <p class="muted">회원가입/로그인과 프로필/환경설정의 폼, 동기화, 스위치 상태를 함께 검토합니다.</p>
+            <a class="btn-primary" href="./screen_auth.html#scr-09">계정 화면 보기</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

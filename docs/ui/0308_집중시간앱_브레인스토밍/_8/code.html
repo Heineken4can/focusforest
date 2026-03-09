@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7dd3fc",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#0d1117",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .timer-ring {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-[#0a0b14] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between p-4 bg-transparent">
+<button class="text-slate-900 dark:text-slate-100 p-2 hover:bg-primary/10 rounded-full transition-colors">
+<span class="material-symbols-outlined text-2xl">close</span>
+</button>
+<h2 class="text-lg font-bold font-display">몰입 모드</h2>
+<button class="text-slate-900 dark:text-slate-100 p-2 hover:bg-primary/10 rounded-full transition-colors">
+<span class="material-symbols-outlined text-2xl">more_vert</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col items-center justify-center px-6">
+<!-- Large Circular Progress Timer -->
+<div class="relative flex items-center justify-center w-72 h-72 mb-8">
+<!-- Background Glow Effect -->
+<div class="absolute inset-0 bg-primary/10 blur-[100px] rounded-full"></div>
+<!-- SVG Circle -->
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-primary/10" cx="144" cy="144" fill="transparent" r="130" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary transition-all duration-1000 drop-shadow-[0_0_8px_rgba(125,211,252,0.5)]" cx="144" cy="144" fill="transparent" r="130" stroke="currentColor" stroke-dasharray="816.8" stroke-dashoffset="0" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<!-- Timer Text -->
+<div class="absolute flex flex-col items-center">
+<span class="text-6xl font-bold font-display tracking-tighter">25:00</span>
+<span class="text-primary font-medium mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">bolt</span>
+                    몰입 중...
+                </span>
+</div>
+</div>
+<!-- Task Info Section -->
+<div class="text-center space-y-2">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-widest">현재 작업</p>
+<h3 class="text-2xl font-bold dark:text-white">시스템 아키텍처</h3>
+</div>
+<!-- Stats Grid (Subtle UI Detail) -->
+<div class="grid grid-cols-2 gap-4 w-full max-w-xs mt-12">
+<div class="bg-primary/5 dark:bg-primary/10 p-4 rounded-xl border border-primary/10">
+<p class="text-xs text-slate-500 dark:text-slate-400 mb-1">세션</p>
+<p class="text-lg font-bold">1 / 4</p>
+</div>
+<div class="bg-primary/5 dark:bg-primary/10 p-4 rounded-xl border border-primary/10">
+<p class="text-xs text-slate-500 dark:text-slate-400 mb-1">집중 시간</p>
+<p class="text-lg font-bold">45분</p>
+</div>
+</div>
+</main>
+<!-- Bottom Actions -->
+<footer class="p-8 flex flex-col items-center">
+<button class="w-full max-w-sm py-4 bg-primary/5 hover:bg-primary/10 text-primary/80 font-bold rounded-xl transition-all border border-primary/10">
+            포기하기
+        </button>
+<p class="mt-4 text-xs text-slate-500 dark:text-slate-500 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">info</span>
+            포기하면 현재까지의 집중 데이터가 사라집니다.
+        </p>
+</footer>
+<!-- Decorative Elements for "Immersive" feel -->
+<div class="fixed top-1/4 -left-20 w-64 h-64 bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
+<div class="fixed bottom-1/4 -right-20 w-64 h-64 bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
+</body></html>

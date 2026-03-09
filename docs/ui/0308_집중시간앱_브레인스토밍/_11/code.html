@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>모바일 대시보드 - 미니멀 버전</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2536f4",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101122",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(37, 54, 244, 0.2);
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- Top Header -->
+<header class="sticky top-0 z-10 flex items-center justify-between px-6 py-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-primary tracking-wider uppercase">Productivity</span>
+<h1 class="text-xl font-bold tracking-tight">대시보드</h1>
+</div>
+<button class="flex items-center justify-center size-10 rounded-full bg-slate-200 dark:bg-slate-800 hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300">account_circle</span>
+</button>
+</header>
+<main class="flex-1 overflow-y-auto custom-scrollbar px-6 pb-24">
+<!-- Focus Task Card -->
+<section class="mt-6">
+<div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary to-blue-700 p-6 shadow-xl shadow-primary/20">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-9xl">bolt</span>
+</div>
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-4">
+<span class="px-2 py-1 bg-white/20 rounded text-[10px] font-bold uppercase tracking-widest text-white">Focus Task</span>
+</div>
+<h2 class="text-2xl font-bold text-white mb-2">디자인 시스템 가이드라인 업데이트</h2>
+<p class="text-blue-100/80 text-sm mb-6">마감 기한: 오늘 오후 2:00</p>
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-xs text-blue-200 font-medium">진행률</span>
+<span class="text-lg font-bold text-white">65%</span>
+</div>
+<button class="px-6 py-2.5 bg-white text-primary rounded-lg font-bold text-sm hover:bg-slate-100 transition-colors shadow-lg">
+                            시작하기
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats Overview (Minimal) -->
+<section class="mt-8 grid grid-cols-2 gap-4">
+<div class="p-4 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-2 text-primary mb-1">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span class="text-xs font-bold uppercase tracking-tighter">집중 시간</span>
+</div>
+<div class="text-xl font-bold">4h 20m</div>
+</div>
+<div class="p-4 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-2 text-emerald-500 mb-1">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+<span class="text-xs font-bold uppercase tracking-tighter">완료 작업</span>
+</div>
+<div class="text-xl font-bold">12 / 15</div>
+</div>
+</section>
+<!-- To-Do List -->
+<section class="mt-8">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold">오늘의 할 일</h3>
+<button class="text-primary text-sm font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">add</span>
+                    추가
+                </button>
+</div>
+<div class="space-y-3">
+<!-- Task Item 1 -->
+<div class="group flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-primary/50 transition-all">
+<div class="relative flex items-center justify-center">
+<input class="peer h-6 w-6 rounded-full border-2 border-slate-300 dark:border-slate-700 bg-transparent text-primary focus:ring-primary/20 transition-all cursor-pointer" type="checkbox"/>
+<span class="material-symbols-outlined absolute pointer-events-none opacity-0 peer-checked:opacity-100 text-white text-xs">check</span>
+</div>
+<div class="flex-1">
+<p class="font-semibold text-sm peer-checked:line-through peer-checked:text-slate-400 transition-all">팀 미팅 자료 준비</p>
+<p class="text-xs text-slate-500">오전 10:00 - 11:00</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors cursor-pointer">more_vert</span>
+</div>
+<!-- Task Item 2 -->
+<div class="group flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-primary/50 transition-all">
+<div class="relative flex items-center justify-center">
+<input class="peer h-6 w-6 rounded-full border-2 border-slate-300 dark:border-slate-700 bg-transparent text-primary focus:ring-primary/20 transition-all cursor-pointer" type="checkbox"/>
+<span class="material-symbols-outlined absolute pointer-events-none opacity-0 peer-checked:opacity-100 text-white text-xs">check</span>
+</div>
+<div class="flex-1">
+<p class="font-semibold text-sm">주간 실적 보고서 작성</p>
+<p class="text-xs text-slate-500">오후 3:00</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors cursor-pointer">more_vert</span>
+</div>
+<!-- Task Item 3 (Completed) -->
+<div class="group flex items-center gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 opacity-60">
+<div class="relative flex items-center justify-center">
+<input checked="" class="peer h-6 w-6 rounded-full border-2 border-primary bg-primary text-primary focus:ring-primary/20 transition-all cursor-pointer" type="checkbox"/>
+<span class="material-symbols-outlined absolute pointer-events-none opacity-100 text-white text-xs">check</span>
+</div>
+<div class="flex-1">
+<p class="font-semibold text-sm line-through text-slate-400">이메일 확인 및 답장</p>
+<p class="text-xs text-slate-500">완료</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer">delete</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-background-dark/90 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 px-6 pb-6 pt-3 z-20">
+<div class="flex items-center justify-between max-w-md mx-auto">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined font-variation-settings-fill">home</span>
+<span class="text-[10px] font-bold">홈</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">timer</span>
+<span class="text-[10px] font-bold">타이머</span>
+</a>
+<div class="relative -top-6">
+<button class="flex items-center justify-center size-14 rounded-full bg-primary text-white shadow-lg shadow-primary/40 ring-4 ring-background-light dark:ring-background-dark">
+<span class="material-symbols-outlined text-2xl">add</span>
+</button>
+</div>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="text-[10px] font-bold">통계</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-bold">설정</span>
+</a>
+</div>
+</nav>
+</body></html>

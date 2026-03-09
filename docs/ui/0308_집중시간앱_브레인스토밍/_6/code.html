@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2536f4",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#0a0b14",
+                        "surface-dark": "#16172b",
+                        "border-dark": "#222549",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', 'Noto Sans KR', sans-serif; }
+        .glass { background: rgba(22, 23, 43, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(34, 37, 73, 0.5); }
+        .active-nav { background: linear-gradient(90deg, rgba(37, 54, 244, 0.2) 0%, rgba(37, 54, 244, 0) 100%); border-left: 3px solid #2536f4; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-64 flex flex-col border-r border-border-dark bg-background-dark shrink-0">
+<div class="p-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined fill-1">forest</span>
+</div>
+<div>
+<h1 class="text-lg font-bold tracking-tight">집중의 숲</h1>
+<p class="text-xs text-slate-400">Forest of Focus</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1 mt-4">
+<div class="active-nav flex items-center gap-3 px-4 py-3 text-primary rounded-r-lg">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-semibold">대시보드</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 transition-colors cursor-pointer">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="text-sm font-medium">통계 리포트</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 transition-colors cursor-pointer">
+<span class="material-symbols-outlined">potted_plant</span>
+<span class="text-sm font-medium">숲 가꾸기</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 transition-colors cursor-pointer">
+<span class="material-symbols-outlined">trophy</span>
+<span class="text-sm font-medium">챌린지</span>
+</div>
+<div class="pt-8 pb-2 px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Community</div>
+<div class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 transition-colors cursor-pointer">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium">친구 목록</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 transition-colors cursor-pointer">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="text-sm font-medium">상점</span>
+</div>
+</nav>
+<div class="p-4">
+<div class="glass rounded-xl p-4 border border-primary/20 bg-primary/5">
+<p class="text-xs text-slate-400 mb-2">프리미엄 혜택</p>
+<p class="text-sm font-bold mb-3">더 많은 나무 종류를 잠금 해제하세요</p>
+<button class="w-full py-2 bg-primary text-white text-xs font-bold rounded-lg hover:bg-primary/90 transition-all">업그레이드</button>
+</div>
+</div>
+<div class="p-6 border-t border-border-dark flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-800 border border-border-dark overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="User profile avatar with minimalist design" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxKpH0pb1CBMvcw_DvU1xo2b2kuuhlND7Bsc6ILgfRlgW76dUtDq6j3gTbTB3ccMvb2Sfi7sS9gCkGUOmIjHKckcLAn2LkftoTQyVIM56hTASz1gL8gIc3X9ED9onps3jgc3sS2-gmZurH0iYCSjwuQy_vk3xjnpOHxT4dnLSuKC1dYuapKQVPS3fbqyEy8BloHMZhm2qbSZnBR0ZUhKIKd4B1zO9QsEGREFseLhEoYchUsQENAiPwW76OcTWwCHNLks5CukD5tqw"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-bold truncate">김철수</p>
+<p class="text-xs text-slate-500 truncate">LV. 24 숲지기</p>
+</div>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer">settings</span>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col overflow-hidden bg-slate-50 dark:bg-background-dark">
+<!-- Top Header -->
+<header class="h-16 border-b border-border-dark bg-background-dark flex items-center justify-between px-8 shrink-0">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xl">search</span>
+<input class="w-full bg-surface-dark border-border-dark rounded-lg py-2 pl-10 pr-4 text-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none text-slate-200" placeholder="작업, 친구, 챌린지 검색..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-yellow-500/10 text-yellow-500 rounded-full border border-yellow-500/20">
+<span class="material-symbols-outlined text-sm fill-1">bolt</span>
+<span class="text-xs font-bold">1,240 SP</span>
+</div>
+<div class="flex items-center gap-4 text-slate-400">
+<div class="relative cursor-pointer">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border-2 border-background-dark"></span>
+</div>
+<span class="material-symbols-outlined cursor-pointer">calendar_today</span>
+</div>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-8">
+<div class="flex flex-col gap-8 max-w-7xl mx-auto">
+<!-- Hero Section: Current Focus -->
+<section>
+<div class="flex justify-between items-end mb-4">
+<div>
+<h2 class="text-2xl font-extrabold tracking-tight mb-1">현재 진행 중인 몰입</h2>
+<p class="text-slate-500 text-sm">현재 2시간 15분째 딥 워크 상태입니다.</p>
+</div>
+<button class="px-6 py-2.5 bg-red-500/10 text-red-500 border border-red-500/20 rounded-lg text-sm font-bold hover:bg-red-500 hover:text-white transition-all">
+                                집중 종료
+                            </button>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2 relative group overflow-hidden rounded-2xl glass p-8 flex flex-col justify-between min-h-[320px]">
+<div class="absolute inset-0 z-0 opacity-40">
+<div class="absolute inset-0 bg-gradient-to-r from-background-dark to-transparent"></div>
+<img class="w-full h-full object-cover" data-alt="Atmospheric technology workspace with soft blue lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1phP5YZj6hu6CUNwLmTJU-VEJx4q8dDDGMbTeIqK-7tvdljRXn0mCL9KzzftINkhsGZDy5ZETU-90fHwIWhlP3V8EzI2LtGsvl9BM3TqoSqsNio7Su5N7VC6UPSPLW9dndIVLeiYhCvHPaqTC7y8Fj3ON0bg8R2u7Cb1jAEDsITW3vXAshyuzvMLYty_VRT2R0hGG42pEKS-Mm3pWRODRy3o3bkMYYVL2mrNzD_cdhIzrug8UaH5C-JbPdwYFXoVPtiP3GYK4bx8"/>
+</div>
+<div class="relative z-10">
+<span class="px-3 py-1 rounded-full bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/30">Core Task</span>
+<h3 class="text-3xl font-bold mt-4 mb-2">UI 시스템 아키텍처 설계</h3>
+<p class="text-slate-300 max-w-md">디자인 시스템 고도화 및 React 컴포넌트 라이브러리 인터페이스 정의</p>
+</div>
+<div class="relative z-10 flex items-center gap-8">
+<div class="flex flex-col">
+<span class="text-xs text-slate-400 font-medium">진행률</span>
+<span class="text-xl font-bold text-primary">75%</span>
+</div>
+<div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[75%] shadow-[0_0_15px_rgba(37,54,244,0.5)]"></div>
+</div>
+<button class="px-5 py-2 bg-primary text-white rounded-lg font-bold text-sm shadow-lg shadow-primary/20">상세 정보</button>
+</div>
+</div>
+<!-- Stat Mini Cards -->
+<div class="flex flex-col gap-4">
+<div class="glass rounded-2xl p-6 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
+<span class="material-symbols-outlined fill-1">timer</span>
+</div>
+<span class="text-xs text-emerald-500 font-bold font-display">+12% vs 어제</span>
+</div>
+<div>
+<p class="text-slate-400 text-sm font-medium">오늘의 총 집중 시간</p>
+<p class="text-2xl font-bold">5h 42m</p>
+</div>
+</div>
+<div class="glass rounded-2xl p-6 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div class="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center">
+<span class="material-symbols-outlined fill-1">park</span>
+</div>
+<span class="text-xs text-blue-500 font-bold font-display">오늘 3그루</span>
+</div>
+<div>
+<p class="text-slate-400 text-sm font-medium">심은 나무</p>
+<p class="text-2xl font-bold">128 그루</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Task Grid and Statistics Section -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<!-- Task List -->
+<section class="xl:col-span-2">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xl font-bold">오늘의 할 일</h3>
+<button class="text-primary text-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-base">add</span>
+                                    작업 추가
+                                </button>
+</div>
+<div class="space-y-3">
+<!-- Task Item Active -->
+<div class="bg-surface-dark border border-primary/30 rounded-xl p-4 flex items-center gap-4 shadow-lg shadow-primary/5">
+<div class="w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center cursor-pointer">
+<div class="w-3 h-3 bg-primary rounded-sm"></div>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold">대시보드 반응형 레이아웃 구현</p>
+<p class="text-xs text-slate-500">UX/UI Design • 2시간 예정</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-primary/10 text-primary border border-primary/20">진행중</span>
+<span class="material-symbols-outlined text-slate-600 cursor-pointer hover:text-slate-400">more_vert</span>
+</div>
+</div>
+<!-- Task Item -->
+<div class="bg-surface-dark/40 border border-border-dark rounded-xl p-4 flex items-center gap-4 hover:border-slate-700 transition-colors">
+<div class="w-6 h-6 rounded-full border-2 border-slate-700 cursor-pointer"></div>
+<div class="flex-1">
+<p class="text-sm font-bold text-slate-300">API 엔드포인트 문서화</p>
+<p class="text-xs text-slate-500">Backend • 1시간 예정</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400 border border-slate-700">대기</span>
+<span class="material-symbols-outlined text-slate-600 cursor-pointer hover:text-slate-400">more_vert</span>
+</div>
+</div>
+<!-- Task Item -->
+<div class="bg-surface-dark/40 border border-border-dark rounded-xl p-4 flex items-center gap-4 hover:border-slate-700 transition-colors">
+<div class="w-6 h-6 rounded-full border-2 border-slate-700 cursor-pointer"></div>
+<div class="flex-1">
+<p class="text-sm font-bold text-slate-300">팀 회의 준비 (스프린트 #4)</p>
+<p class="text-xs text-slate-500">Management • 30분 예정</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400 border border-slate-700">대기</span>
+<span class="material-symbols-outlined text-slate-600 cursor-pointer hover:text-slate-400">more_vert</span>
+</div>
+</div>
+<!-- Completed Task -->
+<div class="bg-surface-dark/20 border border-border-dark/50 rounded-xl p-4 flex items-center gap-4 opacity-60">
+<div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm">check</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold line-through">이메일 피드백 확인</p>
+<p class="text-xs text-slate-500">General</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Focus Analysis Sidebar -->
+<section>
+<h3 class="text-xl font-bold mb-4">몰입 통계</h3>
+<div class="glass rounded-2xl p-6 overflow-hidden">
+<div class="flex items-center justify-between mb-6">
+<p class="text-sm font-bold">주간 집중 트렌드</p>
+<select class="bg-transparent border-none text-xs font-bold text-primary focus:ring-0 p-0">
+<option>이번 주</option>
+<option>지난 주</option>
+</select>
+</div>
+<div class="flex items-end justify-between h-32 gap-2 mb-6">
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-slate-800 rounded-t-sm h-12"></div>
+<span class="text-[10px] text-slate-500 font-bold uppercase">Mon</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-slate-800 rounded-t-sm h-20"></div>
+<span class="text-[10px] text-slate-500 font-bold uppercase">Tue</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-primary rounded-t-sm h-28 relative">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-primary">6.2h</div>
+</div>
+<span class="text-[10px] text-primary font-bold uppercase">Wed</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-slate-800 rounded-t-sm h-16"></div>
+<span class="text-[10px] text-slate-500 font-bold uppercase">Thu</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-slate-800 rounded-t-sm h-24"></div>
+<span class="text-[10px] text-slate-500 font-bold uppercase">Fri</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-slate-800/50 rounded-t-sm h-8"></div>
+<span class="text-[10px] text-slate-500 font-bold uppercase">Sat</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-slate-800/50 rounded-t-sm h-6"></div>
+<span class="text-[10px] text-slate-500 font-bold uppercase">Sun</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-dark">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<span class="text-xs font-medium">평균 몰입 시간</span>
+</div>
+<span class="text-sm font-bold">4.2시간</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-dark">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">psychology</span>
+<span class="text-xs font-medium">최고 집중 시간대</span>
+</div>
+<span class="text-sm font-bold">14:00 - 16:00</span>
+</div>
+</div>
+<button class="w-full mt-6 py-3 border border-border-dark rounded-xl text-xs font-bold text-slate-400 hover:bg-slate-800/50 transition-all">전체 리포트 보기</button>
+</div>
+</section>
+</div>
+</div>
+</div>
+</main>
+<!-- Right Sidebar (Social/Store Mini) -->
+<aside class="w-80 hidden 2xl:flex flex-col border-l border-border-dark bg-background-dark p-6 overflow-y-auto">
+<h3 class="text-lg font-bold mb-6">친구 활동</h3>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="relative">
+<div class="w-10 h-10 rounded-full bg-slate-800 border-2 border-emerald-500">
+<img class="w-full h-full object-cover rounded-full" data-alt="Portrait of a person smiling, vibrant colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuiFkgDGBIrrAbFfQwLVwS8W62LK8qp6nCa3h_NQhfmWYsAY71cZfOfCH97WmSmOA0uKWLnQVqhqet9CWuWutidlO32Jmnf8zspbWmal9Ra8iaEsc80oXm7-e14vHJEe2WF37Q0X6mMxvRIadrcnw8vBUnA5OHsZ2EubPj4kjz8JchYFG0490ylJr6hFe9cWHve0CMQAoM9Ly1ZWnwDna9v8TUj9yE7n1PReI7dF6PCVPEGZihuJF-YK7x-0jnlaVNf7gByK7cW9Q"/>
+</div>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-background-dark flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-white fill-1">forest</span>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-sm font-bold truncate">이서현</p>
+<span class="text-[10px] text-slate-500">방금 전</span>
+</div>
+<p class="text-xs text-slate-400 truncate">신비로운 소나무 숲에서 집중 중</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-10 h-10 rounded-full bg-slate-800 border-2 border-transparent">
+<img class="w-full h-full object-cover rounded-full" data-alt="Abstract minimalist portrait of a professional" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgZsXpwzmO3qpHl84dGSC2F39jzkpwu5X_EaCS6wkiwkWhNQ4bQu_-PSQ-VJmEdQge34S6xLQLzseM_-ThgonFGJvd8egjned-is4jSiuEM2WnaL5r_Bua2WbCPGY4e0v1_LiZR891sgHGrPXThZQbfQnivn6Oq2AB8wv54F5ua7PptEPzjazLtszKwChcnmZ87pyjU1KKx6_LvCzCRlDaYADxBcrSKWrR_kviRcCun107Ew_Jft8QYBj7I2wS9eZbm5oHXTM0AP0"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-sm font-bold truncate">박지민</p>
+<span class="text-[10px] text-slate-500">12분 전</span>
+</div>
+<p class="text-xs text-slate-400 truncate">오늘 4번째 나무를 심었습니다!</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-10 h-10 rounded-full bg-slate-800 border-2 border-transparent">
+<img class="w-full h-full object-cover rounded-full" data-alt="Graphic avatar of a young developer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtWhMwqTd1rGeV8gF3ECYgy7OBp9VqmoX2Dif2hXg-STVdUQ8ZYfRH_wDhUEwxqQypX61G92E9oZeoVrpNwmfXqhOuf0rNc3hGKLy4dLQ1otMyUqBjW9HADP5Mo6biHvi49Xc4bmQ_W9-S6mvErqoP6ngt2JXxBcWoHbYmV0NmIYoU3trpBRlNw4hDDTLNhnjnJTsagweOmxRgjPdgGjSGyVvL11y6hr_5miha42VNQpJe00A8Tpqd450yUI-kPAvVTP0244ADMB0"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-sm font-bold truncate">최강민</p>
+<span class="text-[10px] text-slate-500">1시간 전</span>
+</div>
+<p class="text-xs text-slate-400 truncate">주간 랭킹 5위에 진입했습니다.</p>
+</div>
+</div>
+</div>
+<div class="mt-12">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold">이달의 숲 아이템</h3>
+<span class="text-xs text-primary font-bold cursor-pointer">더보기</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="glass rounded-xl p-3 flex flex-col items-center">
+<div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-primary rounded-lg mb-3 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-3xl">filter_vintage</span>
+</div>
+<p class="text-xs font-bold text-center mb-1">네온 라일락</p>
+<p class="text-[10px] text-yellow-500 font-bold">400 SP</p>
+</div>
+<div class="glass rounded-xl p-3 flex flex-col items-center">
+<div class="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg mb-3 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-3xl">nest_cam_iq</span>
+</div>
+<p class="text-xs font-bold text-center mb-1">황금 둥지</p>
+<p class="text-[10px] text-yellow-500 font-bold">1,200 SP</p>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-8">
+<div class="bg-primary/10 rounded-2xl p-6 border border-primary/20">
+<h4 class="font-bold text-sm mb-2">오늘의 명언</h4>
+<p class="text-xs text-slate-300 leading-relaxed">"집중은 어떤 것을 선택하는 것이 아니라, 다른 수천 가지의 좋은 아이디어를 거절하는 것이다."</p>
+<p class="text-[10px] text-slate-500 mt-3 italic">- 스티브 잡스</p>
+</div>
+</div>
+</aside>
+</div>
+</body></html>

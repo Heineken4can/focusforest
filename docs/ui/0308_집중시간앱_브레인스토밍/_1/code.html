@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>데스크톱 대시보드 - 미니멀 버전</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2536f4",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101122",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .sidebar-item-active {
+            background: rgba(37, 54, 244, 0.15);
+            border-right: 3px solid #2536f4;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased overflow-hidden">
+<div class="flex h-screen w-full overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-20 lg:w-64 border-r border-slate-200 dark:border-slate-800 flex flex-col items-center lg:items-stretch py-8 transition-all duration-300">
+<div class="px-6 mb-10 flex items-center gap-3">
+<div class="h-8 w-8 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xl">bolt</span>
+</div>
+<span class="text-xl font-bold tracking-tight hidden lg:block">FocusFlow</span>
+</div>
+<nav class="flex-1 space-y-2 px-3">
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl sidebar-item-active text-primary transition-colors" href="#">
+<span class="material-symbols-outlined fill-1">grid_view</span>
+<span class="font-medium hidden lg:block">대시보드</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="font-medium hidden lg:block">통계</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium hidden lg:block">설정</span>
+</a>
+</nav>
+<div class="mt-auto px-3 border-t border-slate-200 dark:border-slate-800 pt-6">
+<div class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/10 text-slate-500 dark:text-slate-400 hover:text-red-500 cursor-pointer transition-colors">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-medium hidden lg:block">로그아웃</span>
+</div>
+<div class="mt-4 flex items-center gap-3 px-4">
+<div class="size-8 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center" data-alt="User profile circular avatar image" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDnjNVBTw5TJnaHOTT2jWvJsJMpCq31HzTGLLkqk8ACybrI7oByZXqEpQIiv_msmlL8KRQFeW1myXNUMQIOj718T7Ui3fHa5552PCJQTlH8ZMWJjzTswPU5uiv7o2Nu9cwJ2CIX4p1M_SH2UsbSw1bEGOzmD8GgwH1Bryc_RqU5_mXT5cNrmY7LqL0ls9oPSA7bUSNXKrrMzBhg-7UsxR0BIXU4a2gdjcIFdnpGFYXnNIQtGQbenjmPKC86Ew6H-1bT_Z0jgraDo-c')"></div>
+<div class="hidden lg:block overflow-hidden">
+<p class="text-sm font-semibold truncate">사용자</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 truncate">Professional Plan</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Dashboard Content -->
+<main class="flex-1 flex flex-col overflow-y-auto bg-[#0a0b14]">
+<!-- Header Area -->
+<header class="flex items-center justify-between px-8 py-6">
+<div>
+<h1 class="text-2xl font-bold tracking-tight">반갑습니다, 사용자님</h1>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-1">오늘의 목표를 달성할 준비가 되셨나요?</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-sm font-medium">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        생산성 모드 가동 중
+                    </div>
+</div>
+</header>
+<div class="p-8 grid grid-cols-1 xl:grid-cols-12 gap-8">
+<!-- Main Focus Task Section -->
+<section class="xl:col-span-8 flex flex-col gap-8">
+<div class="glass-panel p-8 rounded-2xl relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[100px] rounded-full -mr-20 -mt-20"></div>
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-10">
+<div>
+<span class="text-xs font-bold uppercase tracking-widest text-primary mb-2 block">현재 집중 과제</span>
+<h2 class="text-4xl font-extrabold tracking-tight">UI 디자인 시스템 고도화</h2>
+</div>
+<div class="text-right">
+<span class="text-5xl font-black text-primary">65<span class="text-2xl">%</span></span>
+<p class="text-slate-400 text-xs mt-1 uppercase tracking-tighter">완료율</p>
+</div>
+</div>
+<div class="space-y-4">
+<div class="w-full h-4 bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 65%"></div>
+</div>
+<div class="flex justify-between text-sm text-slate-400 font-medium">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                                        완료까지 약 2시간 남음
+                                    </div>
+<div class="flex items-center gap-2">
+<span>마감 기한: 오늘 18:00</span>
+</div>
+</div>
+</div>
+<div class="mt-10 flex gap-4">
+<button class="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined">play_arrow</span>
+                                    집중 시작
+                                </button>
+<button class="px-6 py-3 bg-white/5 text-slate-300 font-bold rounded-xl hover:bg-white/10 transition-all border border-white/10">
+                                    과제 수정
+                                </button>
+</div>
+</div>
+</div>
+<!-- Task List -->
+<div class="glass-panel p-6 rounded-2xl">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold">할 일 목록</h3>
+<button class="text-primary text-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">add</span>
+                                항목 추가
+                            </button>
+</div>
+<div class="space-y-1">
+<label class="flex items-center gap-4 p-4 hover:bg-white/5 rounded-xl cursor-pointer transition-all border border-transparent hover:border-white/5">
+<input class="h-5 w-5 rounded border-slate-700 bg-transparent text-primary focus:ring-primary focus:ring-offset-background-dark" type="checkbox"/>
+<div class="flex-1">
+<p class="text-slate-200 font-medium">구성 요소 API 명세 작성</p>
+<p class="text-xs text-slate-500">오전 11:00 마감</p>
+</div>
+<span class="material-symbols-outlined text-slate-600">drag_indicator</span>
+</label>
+<label class="flex items-center gap-4 p-4 hover:bg-white/5 rounded-xl cursor-pointer transition-all border border-transparent hover:border-white/5">
+<input checked="" class="h-5 w-5 rounded border-slate-700 bg-transparent text-primary focus:ring-primary focus:ring-offset-background-dark" type="checkbox"/>
+<div class="flex-1">
+<p class="text-slate-500 font-medium line-through">반응형 그리드 테스트</p>
+<p class="text-xs text-slate-600">완료됨</p>
+</div>
+<span class="material-symbols-outlined text-slate-600">drag_indicator</span>
+</label>
+<label class="flex items-center gap-4 p-4 hover:bg-white/5 rounded-xl cursor-pointer transition-all border border-transparent hover:border-white/5">
+<input class="h-5 w-5 rounded border-slate-700 bg-transparent text-primary focus:ring-primary focus:ring-offset-background-dark" type="checkbox"/>
+<div class="flex-1">
+<p class="text-slate-200 font-medium">다크 모드 컬러 팔레트 수정</p>
+<p class="text-xs text-slate-500">오후 03:00 예정</p>
+</div>
+<span class="material-symbols-outlined text-slate-600">drag_indicator</span>
+</label>
+<label class="flex items-center gap-4 p-4 hover:bg-white/5 rounded-xl cursor-pointer transition-all border border-transparent hover:border-white/5">
+<input class="h-5 w-5 rounded border-slate-700 bg-transparent text-primary focus:ring-primary focus:ring-offset-background-dark" type="checkbox"/>
+<div class="flex-1">
+<p class="text-slate-200 font-medium">프로토타입 피드백 반영</p>
+<p class="text-xs text-slate-500">내일 오전</p>
+</div>
+<span class="material-symbols-outlined text-slate-600">drag_indicator</span>
+</label>
+</div>
+</div>
+</section>
+<!-- Statistics & Side Info Section -->
+<section class="xl:col-span-4 flex flex-col gap-8">
+<!-- Stat Card 1 -->
+<div class="glass-panel p-6 rounded-2xl">
+<h3 class="text-slate-400 text-sm font-bold uppercase tracking-wider mb-6">주간 생산성 흐름</h3>
+<div class="flex items-end justify-between gap-2 h-32 mb-6">
+<div class="flex-1 bg-white/5 hover:bg-primary/30 rounded-t-lg transition-all h-[40%]"></div>
+<div class="flex-1 bg-white/5 hover:bg-primary/30 rounded-t-lg transition-all h-[65%]"></div>
+<div class="flex-1 bg-white/5 hover:bg-primary/30 rounded-t-lg transition-all h-[55%]"></div>
+<div class="flex-1 bg-white/5 hover:bg-primary/30 rounded-t-lg transition-all h-[90%]"></div>
+<div class="flex-1 bg-primary/80 rounded-t-lg transition-all h-[75%]"></div>
+<div class="flex-1 bg-white/5 hover:bg-primary/30 rounded-t-lg transition-all h-[20%]"></div>
+<div class="flex-1 bg-white/5 hover:bg-primary/30 rounded-t-lg transition-all h-[15%]"></div>
+</div>
+<div class="flex justify-between text-[10px] text-slate-500 font-bold px-1 uppercase tracking-tighter">
+<span>Mon</span>
+<span>Tue</span>
+<span>Wed</span>
+<span>Thu</span>
+<span>Fri</span>
+<span>Sat</span>
+<span>Sun</span>
+</div>
+</div>
+<!-- Stat Card 2 - Performance -->
+<div class="glass-panel p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-transparent">
+<div class="flex items-center gap-4 mb-4">
+<div class="size-12 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl">bolt</span>
+</div>
+<div>
+<h4 class="font-bold text-lg">집중 지수</h4>
+<p class="text-xs text-slate-400">지난주 대비 12% 상승</p>
+</div>
+</div>
+<div class="mt-4 p-4 bg-black/20 rounded-xl">
+<div class="flex justify-between items-center text-sm mb-2">
+<span class="text-slate-400">오늘의 평균 집중</span>
+<span class="font-bold">4.2h</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-slate-400">달성한 과제 수</span>
+<span class="font-bold">8개</span>
+</div>
+</div>
+</div>
+<!-- Upcoming Timeline -->
+<div class="glass-panel p-6 rounded-2xl flex-1">
+<h3 class="text-lg font-bold mb-6">오늘의 타임라인</h3>
+<div class="space-y-6 relative before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-800">
+<div class="relative pl-10">
+<div class="absolute left-0 top-1.5 size-6 rounded-full bg-primary border-4 border-background-dark z-10"></div>
+<p class="text-xs text-slate-500 font-bold">13:00 - 15:00</p>
+<p class="text-sm font-semibold text-slate-200">심층 집중 세션 (디자인)</p>
+</div>
+<div class="relative pl-10">
+<div class="absolute left-0 top-1.5 size-6 rounded-full bg-slate-700 border-4 border-background-dark z-10"></div>
+<p class="text-xs text-slate-500 font-bold">15:30 - 16:30</p>
+<p class="text-sm font-semibold text-slate-400">이메일 및 커뮤니케이션</p>
+</div>
+<div class="relative pl-10">
+<div class="absolute left-0 top-1.5 size-6 rounded-full bg-slate-700 border-4 border-background-dark z-10"></div>
+<p class="text-xs text-slate-500 font-bold">17:00 - 18:00</p>
+<p class="text-sm font-semibold text-slate-400">일일 업무 마무리 회고</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>
