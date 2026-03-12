@@ -1,0 +1,250 @@
+﻿<!DOCTYPE html>
+<html lang="ko" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Forest - 인증 및 설정 레퍼런스</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable.css" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Pretendard Variable"', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        toss: {
+                            bg: '#0B0E14',
+                            surface: '#181B23',
+                            surfaceHover: '#222631',
+                            selected: '#1E2D4A',
+                            blue: '#3182F6',
+                            onPrimary: '#0B0E14',
+                            green: '#1AC97E',
+                            yellow: '#F5A623',
+                            red: '#F04452',
+                            textMain: '#F2F4F6',
+                            textSub: '#8B95A1',
+                            divider: '#2A2D36',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: theme('fontFamily.sans');
+            background:
+                radial-gradient(circle at top left, rgba(49, 130, 246, 0.16), transparent 28%),
+                radial-gradient(circle at bottom right, rgba(26, 201, 126, 0.12), transparent 24%),
+                #0B0E14;
+            color: #F2F4F6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen antialiased">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 space-y-8">
+        <header class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-toss-blue/10 text-toss-blue text-sm font-bold">
+                    <span class="material-symbols-rounded text-base">design_services</span>
+                    인증/설정 화면군 레퍼런스
+                </span>
+                <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight mt-4">SCR-09 · SCR-10 시각 기준</h1>
+                <p class="text-toss-textSub font-medium mt-3 max-w-3xl">
+                    로그인, 로컬 모드 진입, 프로필, 테마, 타임존, 동기화 상태를 한 결로 전달하기 위한 레퍼런스입니다.
+                </p>
+            </div>
+            <div class="flex flex-wrap gap-2 text-sm font-semibold">
+                <span class="inline-flex items-center gap-1 px-3 py-2 rounded-full bg-toss-surface border border-toss-divider text-toss-textMain">
+                    <span class="material-symbols-rounded text-base">vpn_key</span>
+                    SCR-09 인증
+                </span>
+                <span class="inline-flex items-center gap-1 px-3 py-2 rounded-full bg-white text-[#191F28] border border-[#E5E8EB]">
+                    <span class="material-symbols-rounded text-base">settings</span>
+                    SCR-10 설정
+                </span>
+            </div>
+        </header>
+
+        <section class="grid grid-cols-1 lg:grid-cols-[1.02fr_0.98fr] gap-6 lg:gap-8 items-start">
+            <article class="bg-toss-surface rounded-[28px] border border-toss-divider p-6 lg:p-8 space-y-6">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <p class="text-toss-blue text-sm font-bold mb-2">SCR-09 인증 진입</p>
+                        <h2 class="text-2xl font-extrabold leading-tight">계정을 연결하고 집중 기록을 보관하세요</h2>
+                        <p class="text-toss-textSub font-medium mt-3">
+                            이메일 로그인과 회원가입, 로컬 모드 진입을 한 화면에서 명확히 분기합니다.
+                        </p>
+                    </div>
+                    <div class="w-14 h-14 rounded-2xl bg-toss-blue/10 text-toss-blue flex items-center justify-center shrink-0">
+                        <span class="material-symbols-rounded text-[28px]">login</span>
+                    </div>
+                </div>
+
+                <div class="inline-flex p-1 rounded-full bg-toss-bg border border-toss-divider">
+                    <button class="px-4 py-2 rounded-full bg-toss-selected text-toss-textMain font-semibold">로그인</button>
+                    <button class="px-4 py-2 rounded-full text-toss-textSub font-semibold">회원가입</button>
+                    <button class="px-4 py-2 rounded-full text-toss-textSub font-semibold">로컬 모드</button>
+                </div>
+
+                <div class="space-y-4">
+                    <label class="block">
+                        <span class="block text-sm font-semibold text-toss-textMain mb-2">이메일</span>
+                        <div class="h-12 rounded-2xl border border-toss-divider bg-toss-bg px-4 flex items-center text-toss-textSub">
+                            user@focusforest.app
+                        </div>
+                    </label>
+                    <label class="block">
+                        <span class="block text-sm font-semibold text-toss-textMain mb-2">비밀번호</span>
+                        <div class="h-12 rounded-2xl border border-toss-divider bg-toss-bg px-4 flex items-center justify-between text-toss-textSub">
+                            <span>••••••••••</span>
+                            <span class="material-symbols-rounded text-base">visibility_off</span>
+                        </div>
+                        <p class="text-xs text-toss-textSub mt-2">입력 필드는 항상 `type=password` 기준으로 동작하며, 평문 저장은 허용하지 않습니다.</p>
+                    </label>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button class="bg-toss-blue text-toss-onPrimary font-bold py-3.5 rounded-2xl shadow-[0_4px_14px_0_rgba(49,130,246,0.39)]">
+                        로그인
+                    </button>
+                    <button class="bg-toss-bg text-toss-textMain font-bold py-3.5 rounded-2xl border border-toss-divider">
+                        회원가입
+                    </button>
+                </div>
+                <button class="w-full bg-toss-surfaceHover text-toss-textMain font-semibold py-3.5 rounded-2xl border border-toss-divider">
+                    로컬 모드로 계속하기
+                </button>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="rounded-2xl border border-toss-divider bg-toss-bg p-4">
+                        <p class="text-xs font-bold text-toss-yellow mb-2">인증 만료</p>
+                        <p class="text-sm font-semibold">입력값은 유지하고 재로그인을 안내합니다.</p>
+                    </div>
+                    <div class="rounded-2xl border border-toss-divider bg-toss-bg p-4">
+                        <p class="text-xs font-bold text-toss-red mb-2">네트워크 실패</p>
+                        <p class="text-sm font-semibold">현재 폼 상태를 보존한 채 재시도 CTA를 제공합니다.</p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="rounded-[28px] border border-[#E5E8EB] bg-[#F7F9FC] p-6 lg:p-8 text-[#191F28] space-y-6 shadow-[0_20px_60px_rgba(15,23,42,0.18)]">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E8F1FF] text-[#2563EB] text-sm font-bold">
+                            <span class="material-symbols-rounded text-base">light_mode</span>
+                            라이트 테마 예시
+                        </span>
+                        <h2 class="text-2xl font-extrabold leading-tight mt-4">프로필 및 환경설정</h2>
+                        <p class="text-[#6B7684] font-medium mt-3">
+                            프로필 카드, 테마, 타임존, 동기화 상태를 한 화면에서 빠르게 확인하고 수정합니다.
+                        </p>
+                    </div>
+                    <div class="w-14 h-14 rounded-2xl bg-[#E8F1FF] text-[#2563EB] flex items-center justify-center shrink-0">
+                        <span class="material-symbols-rounded text-[28px]">settings</span>
+                    </div>
+                </div>
+
+                <div class="rounded-[24px] bg-white border border-[#E5E8EB] p-5 flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-full bg-[#E8F1FF] flex items-center justify-center text-[#2563EB] shrink-0">
+                        <span class="material-symbols-rounded text-[28px]">forest</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-bold text-[#6B7684]">프로필 카드</p>
+                        <p class="text-lg font-extrabold truncate">LV.3 숲지기</p>
+                        <p class="text-sm font-semibold text-[#0F9F6E] mt-1">오늘의 나무 1그루 · 누적 SP 2,400</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="rounded-2xl bg-white border border-[#E5E8EB] p-4">
+                        <p class="text-xs font-semibold text-[#6B7684]">현재 레벨</p>
+                        <p class="text-lg font-extrabold mt-2">LV.3</p>
+                    </div>
+                    <div class="rounded-2xl bg-white border border-[#E5E8EB] p-4">
+                        <p class="text-xs font-semibold text-[#6B7684]">누적 SP</p>
+                        <p class="text-lg font-extrabold mt-2">2,400</p>
+                    </div>
+                    <div class="rounded-2xl bg-white border border-[#E5E8EB] p-4">
+                        <p class="text-xs font-semibold text-[#6B7684]">오늘의 나무</p>
+                        <p class="text-lg font-extrabold mt-2">1 그루</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-sm font-bold mb-3">테마</p>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="px-4 py-2 rounded-full border border-[#E5E8EB] bg-white text-[#6B7684] font-semibold">시스템</button>
+                            <button class="px-4 py-2 rounded-full bg-[#3182F6] text-[#0B0E14] font-bold">라이트</button>
+                            <button class="px-4 py-2 rounded-full border border-[#E5E8EB] bg-white text-[#6B7684] font-semibold">다크</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="rounded-2xl bg-white border border-[#E5E8EB] p-4">
+                            <p class="text-xs font-semibold text-[#6B7684] mb-2">타임존</p>
+                            <p class="text-base font-bold">Asia/Seoul (UTC+09:00)</p>
+                        </div>
+                        <div class="rounded-2xl bg-white border border-[#E5E8EB] p-4 flex items-center justify-between gap-3">
+                            <div>
+                                <p class="text-xs font-semibold text-[#6B7684] mb-2">자동 동기화</p>
+                                <p class="text-base font-bold">활성화</p>
+                            </div>
+                            <div class="w-12 h-7 rounded-full bg-[#3182F6] p-1 flex justify-end">
+                                <span class="w-5 h-5 rounded-full bg-[#0B0E14] block"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rounded-2xl bg-white border border-[#E5E8EB] p-4">
+                        <p class="text-xs font-semibold text-[#6B7684] mb-2">계정 상태</p>
+                        <p class="text-base font-bold">로그인 사용자</p>
+                        <p class="text-sm text-[#6B7684] mt-2">로그아웃 후 SCR-09로 이동하며, `app_first_open`은 최초 진입 조건을 만족할 때만 발화합니다.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="rounded-2xl border border-[#F4D7D4] bg-[#FFF5F3] p-4">
+                        <p class="text-xs font-bold text-[#D92D20] mb-2">동기화 충돌</p>
+                        <p class="text-sm font-semibold">최신 서버 상태를 우선 안내하고 사용자가 재확인할 수 있게 합니다.</p>
+                    </div>
+                    <div class="rounded-2xl border border-[#D8E7FF] bg-[#F5F9FF] p-4">
+                        <p class="text-xs font-bold text-[#2563EB] mb-2">저장 완료</p>
+                        <p class="text-sm font-semibold">테마, 타임존, 동기화 옵션 변경 직후 즉시 피드백을 제공합니다.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button class="bg-[#3182F6] text-[#0B0E14] font-bold py-3.5 rounded-2xl shadow-[0_8px_24px_rgba(49,130,246,0.24)]">
+                        설정 저장
+                    </button>
+                    <button class="bg-white text-[#191F28] font-bold py-3.5 rounded-2xl border border-[#E5E8EB]">
+                        로그아웃
+                    </button>
+                </div>
+            </article>
+        </section>
+    </main>
+</body>
+
+</html>

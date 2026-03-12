@@ -1,72 +1,123 @@
-# 🎨 디자인 시스템 및 테마 스펙 (Design System) - 집중의 숲 (Focus Forest)
+# Focus Forest v1.8 - UI Design System (design_system)
+
+| 버전 | 날짜 | 작성자 | 변경 내용 |
+|------|------|--------|-----------|
+| v1.8 | 2026-03-12 | UI-Plan | ui_data_contract_rv1 반영, 문서 템플릿 정규화 및 검증 로그 경로 정리 |
+
+## 참조 문서
+- `docs/01. po/PRD_FocusForest.md`
+- `docs/03. architecture/architecture.md`
+- `docs/02. ui/ui_text_definition.md`
+- `docs/02. ui/ui_design.md`
+- `docs/02. ui/ui_data_contract.md`
+- `docs/02. ui/ui_reference_design_master.html`
+- `docs/02. ui/ui_reference_design_timer.html`
+- `docs/02. ui/ui_reference_design_auth.html`
+- `docs/02. ui/design_system_review.md`
 
 ---
-
-
-
-**작성자**: UI/UX 디자인 설계자 (UI-Plan)
-**버전**: v1.6 (2026-03-09, design_system_rv2 반영)
-
----
-
 ## 1. 디자인 컨셉 개요
 
 - **에셋 레퍼런스**: 토스/토스증권 (Toss Invest) 스타일
 - **핵심 키워드**: `#모던`, `#신뢰감`, `#가독성`, `#플랫디자인`, `#대비`
 - **시각적 방향**:
   - **직관적이고 정돈된 토스증권 스타일**: 불필요한 장식을 제거하고 텍스트와 숫자의 가독성을 극대화한 미니멀하고 세련된 UI.
-  - **다크 모드 중심**: 깊이 있는 다크 네이비/블랙 배경을 기반으로, 텍스트의 대비를 높여 눈의 피로도를 낮추고 집중력을 높임.
-  - **명료한 악센트 컬러**: 브랜드 메인 컬러인 '청량한 블루'를 포인트 액션(버튼, 활성 탭)에 사용하고, 상태(성공, 경고 등)에 따른 컬러 대비를 명확하게 줌.
-  - **굵고 명확한 타이포그래피**: 중요한 정보(시간, 레벨, 핵심 과제)는 매우 크고 두꺼운 폰트 웨이트를 적용하여 시선 계층을 확실히 구분.
+  - **라이트/다크 동시 지원**: 대시보드와 인증/설정은 정리와 관리에 적합한 라이트/다크를 모두 지원하고, 집중 모드는 몰입감을 높이기 위해 다크 레퍼런스를 우선 제시한다.
+  - **명료한 악센트 컬러**: 브랜드 메인 컬러인 '청량한 블루'를 포인트 액션(버튼, 활성 탭)에 사용하고, 상태(성공, 경고 등)에 따른 컬러 대비를 명확하게 준다.
+  - **굵고 명확한 타이포그래피**: 중요한 정보(시간, 레벨, 핵심 과제)는 매우 크고 두꺼운 폰트 웨이트를 적용하여 시선 계층을 확실히 구분한다.
+- **테마 운영 원칙**:
+  - 첫 진입 기본값은 시스템 테마를 따른다.
+  - 사용자는 `SCR-10` 설정 화면에서 `시스템 / 라이트 / 다크`를 명시적으로 선택할 수 있어야 한다.
+  - 컴포넌트는 테마와 무관하게 동일한 semantic token 이름(`toss.*`)을 사용하고, 실제 색상 값만 테마별 CSS 변수로 교체한다.
+  - 메인 CTA 라벨은 `toss-bg`가 아니라 `toss-onPrimary` 토큰을 사용해 라이트/다크 전환 시에도 동일한 대비를 유지한다.
+  - semantic field, 세션 상태 enum, KPI 발화 조건은 이 문서가 아니라 `ui_text_definition.md`와 `ui_data_contract.md`를 기준으로 관리한다.
 
 ---
 
 ## 2. 컬러 팔레트 (Color Tokens)
 
-> **⚠️ SSOT 기준**: 토큰은 **Tailwind CSS config(`tailwind.config`)의 `toss.*` 네임스페이스**를 단일 진실 원천으로 사용합니다. 아래 표의 토큰명은 Tailwind 클래스 기준입니다. (`toss-bg`, `toss-surface` 등)
+> **⚠️ SSOT 기준**: 토큰은 **Tailwind CSS config(`tailwind.config`)의 `toss.*` semantic namespace**를 단일 진실 원천으로 사용합니다. 실제 색상 값은 `light` / `dark` 테마 CSS 변수에서 관리하며, 컴포넌트는 토큰 이름을 바꾸지 않습니다.
 
-| 구분                     | Tailwind 토큰명       | Hex Code                                     | 용도                                             |
-| ------------------------ | --------------------- | -------------------------------------------- | ------------------------------------------------ |
-| **Background**     | `toss-bg`           | `#0B0E14`                                  | 앱 전체 최하단 기본 배경 (깊은 다크 네이비/블랙) |
-| **Surface**        | `toss-surface`      | `#181B23`                                  | 카드, 네비게이션, 리스트 아이템 배경             |
-| **Surface Hover**  | `toss-surfaceHover` | `#222631`                                  | 클릭/호버 시 반응하는 서피스 배경색              |
-| **Selected**       | `toss-selected`     | `#1E2D4A`                                  | 선택된 과제, 활성 항목의 배경 (블루 틴트 다크)   |
-| **Primary**        | `toss-blue`         | `#3182F6`                                  | 메인 액션 버튼, 집중 모드 타이머, 쨍한 블루      |
-| **Success**        | `toss-green`        | `#1AC97E`                                  | 세션 완료, 보상 지급, 긍정 완료 상태             |
-| **Warning**        | `toss-yellow`       | `#F5A623`                                  | 타이머 임박, 주의 상태                           |
-| **Danger**         | `toss-red`          | `#F04452`                                  | 포기, 삭제, 에러 상태                            |
-| **Overlay**        | `toss-overlay`      | `rgb(var(--toss-overlay) / <alpha-value>)` | 모달/바텀시트 배경 dim (`bg-toss-overlay/60`)  |
-| **Text Primary**   | `toss-textMain`     | `#F2F4F6`                                  | 메인 텍스트, 제목                                |
-| **Text Secondary** | `toss-textSub`      | `#8B95A1`                                  | 부가 설명, 비활성 탭 텍스트                      |
-| **Divider**        | `toss-divider`      | `#2A2D36`                                  | 은은한 리스트 구분선 및 박스 보더                |
+| 구분 | Tailwind 토큰명 | Dark Theme | Light Theme | 용도 |
+| --- | --- | --- | --- | --- |
+| **Background** | `toss-bg` | `#0B0E14` | `#F7F9FC` | 앱 전체 최하단 기본 배경 |
+| **Surface** | `toss-surface` | `#181B23` | `#FFFFFF` | 카드, 네비게이션, 리스트 아이템 배경 |
+| **Surface Hover** | `toss-surfaceHover` | `#222631` | `#EEF2F7` | 클릭/호버 시 반응하는 서피스 배경색 |
+| **Selected** | `toss-selected` | `#1E2D4A` | `#E8F1FF` | 선택된 과제, 활성 항목의 배경 |
+| **Primary** | `toss-blue` | `#3182F6` | `#3182F6` | 메인 액션 버튼, 집중 모드 타이머, 활성 탭 |
+| **On Primary** | `toss-onPrimary` | `#0B0E14` | `#0B0E14` | 메인 CTA 라벨, Primary 위 아이콘/텍스트 |
+| **Success** | `toss-green` | `#1AC97E` | `#0F9F6E` | 세션 완료, 보상 지급, 긍정 완료 상태 |
+| **Warning** | `toss-yellow` | `#F5A623` | `#B45309` | 타이머 임박, 주의 상태 |
+| **Danger** | `toss-red` | `#F04452` | `#D92D20` | 포기, 삭제, 에러 상태 |
+| **Overlay RGB** | `toss-overlay` | `0 0 0` | `15 23 42` | 모달/바텀시트 배경 dim (`bg-toss-overlay/60`) |
+| **Text Primary** | `toss-textMain` | `#F2F4F6` | `#191F28` | 메인 텍스트, 제목 |
+| **Text Secondary** | `toss-textSub` | `#8B95A1` | `#6B7684` | 부가 설명, 비활성 탭 텍스트 |
+| **Divider** | `toss-divider` | `#2A2D36` | `#E5E8EB` | 은은한 리스트 구분선 및 박스 보더 |
 
-### 2.1 접근성 대비(Contrast) 기준
+### 2.1 테마 모드 운영 규칙
+
+- 최초 진입 시에는 OS 또는 브라우저의 `prefers-color-scheme`를 우선 적용합니다.
+- 사용자가 `SCR-10`에서 테마를 변경하면 해당 값은 로컬 모드에서는 로컬 저장소, 로그인 모드에서는 사용자 설정과 동기화해 유지합니다.
+- 대시보드, 인증/설정 화면은 라이트/다크 모두 동일한 구조와 상태 피드백을 유지해야 합니다.
+- 집중 모드 레퍼런스는 다크 테마를 기준 시안으로 사용하되, 동일한 semantic token 구조로 라이트 테마 전환이 가능해야 합니다.
+- SSR 또는 초기 렌더 단계에서는 hydration 전에 `data-theme` 또는 `class="dark" / class="light"`를 먼저 부여해 FOUC를 방지합니다.
+
+### 2.2 접근성 대비(Contrast) 기준
 
 - 본 프로젝트 텍스트 대비 기준은 **WCAG 2.1 AA 이상(일반 텍스트 4.5:1 이상)** 입니다.
-- `toss-textSub (#8B95A1)` on `toss-bg (#0B0E14)` 대비비는 **6.36:1**로 AA를 충족합니다.
-- `toss-yellow (#F5A623)` on `toss-bg (#0B0E14)` 대비비는 **9.53:1**입니다.
-- `toss-green (#1AC97E)` on `toss-bg (#0B0E14)` 대비비는 **8.92:1**입니다.
-- `toss-red (#F04452)` on `toss-bg (#0B0E14)` 대비비는 **5.20:1**입니다.
-- `toss-blue (#3182F6)` on `toss-textMain (#F2F4F6)` 조합은 **3.37:1**이므로 접근성 기준을 충족하지 않습니다.
-- `toss-blue`는 **일반 텍스트 색상으로 사용하지 않습니다.** 링크, 배지 라벨, 본문 강조, 버튼 라벨 모두 기본 텍스트 토큰(`toss-textMain`, `toss-textSub`)을 우선 사용합니다.
-- 예외적으로 `toss-blue`는 `toss-bg (#0B0E14)` 단색 배경 위의 비본문 수치/아이콘 포인트, 활성 인디케이터, 보더, 포커스 링에만 사용합니다. `toss-surface` 위 텍스트 색상으로는 금지합니다.
-- 메인 CTA 버튼은 `bg-toss-blue text-toss-bg` 조합을 기본으로 사용합니다. 이 조합은 약 **4.70:1** 대비를 확보하므로 버튼 라벨 접근성 기준을 충족합니다.
-- 신규 토큰 추가 시 동일 기준으로 대비비를 검증 후 반영합니다.
-- Overlay 색상은 `:root { --toss-overlay: 0 0 0; }` 기준으로 관리하며, alpha는 유틸리티 클래스(`bg-toss-overlay/60`)에서 조절합니다.
-- Disabled 상태는 두 가지로 구분합니다. `opacity-40`은 클릭 불가 컨테이너, 아이콘, 보조 시각 요소에만 적용합니다. 텍스트를 포함한 Disabled 컴포넌트는 `text-toss-textSub`, `border-toss-divider`, `bg-toss-surface`를 유지해 정보 자체의 가독성을 해치지 않도록 합니다.
+- 다크 테마에서 `toss-textSub (#8B95A1)` on `toss-bg (#0B0E14)` 대비비는 **6.36:1**로 AA를 충족합니다.
+- 다크 테마에서 `toss-yellow (#F5A623)` on `toss-bg (#0B0E14)` 대비비는 **9.53:1**입니다.
+- 다크 테마에서 `toss-green (#1AC97E)` on `toss-bg (#0B0E14)` 대비비는 **8.92:1**입니다.
+- 다크 테마에서 `toss-red (#F04452)` on `toss-bg (#0B0E14)` 대비비는 **5.20:1**입니다.
+- 라이트 테마에서도 `toss-textMain` on `toss-bg`, `toss-textSub` on `toss-surface` 조합이 모두 4.5:1 이상이 되도록 유지합니다.
+- `toss-blue`는 **일반 텍스트 색상으로 사용하지 않습니다.** 링크, 배지 라벨, 본문 강조에는 기본 텍스트 토큰(`toss-textMain`, `toss-textSub`)을 우선 사용하고, `toss-blue`는 활성 인디케이터, 아이콘 포인트, 보더, CTA 배경에 한정합니다.
+- 메인 CTA 버튼은 `bg-toss-blue text-toss-onPrimary` 조합을 기본으로 사용합니다. 라이트/다크 테마 모두 버튼 라벨 대비를 동일하게 확보하기 위해 `toss-bg`를 대체하지 않습니다.
+- Overlay 색상은 `--toss-overlay` RGB 변수 기준으로 관리하며, alpha는 유틸리티 클래스(`bg-toss-overlay/60`)에서 조절합니다.
+- Disabled 상태는 두 가지로 구분합니다. `opacity-40`은 클릭 불가 컨테이너, 아이콘, 보조 시각 요소에만 적용합니다. 텍스트를 포함한 Disabled 컴포넌트는 `text-toss-textSub`, `border-toss-divider`, `bg-toss-surface`를 유지해 정보 자체의 가독성을 해치지 않도록 합니다. 예외적으로 완료된 할 일 row처럼 더 이상 액션을 받지 않는 히스토리성 리스트 항목은 `line-through text-toss-textSub opacity-40 grayscale pointer-events-none` 조합을 허용합니다.
 
-### 2.2 대비비 검증 프로세스
+### 2.3 대비비 검증 프로세스
 
 1. 토큰 추가/변경 시 디자이너가 후보 색상 쌍(텍스트/배경)을 문서에 기록합니다.
 2. 개발 반영 전 WCAG 대비비 계산 도구로 최소 4.5:1(일반 텍스트) 충족 여부를 확인합니다.
-3. 검증 결과(대비비 수치, 조합, 검증일)는 `docs/ui/design_system_review.md`를 기준 기록 문서로 사용해 남깁니다. 임시 검수본을 사용할 경우에도 최종 결과는 해당 경로 기준으로 집계합니다.
+3. 검증 결과(대비비 수치, 조합, 검증일)는 `docs/02. ui/design_system_review.md`를 기준 기록 문서로 사용해 남깁니다. 임시 검수본을 사용할 경우에도 최종 결과는 해당 경로 기준으로 집계합니다.
 4. CI 도입 전까지는 PR 체크리스트에 "대비비 검증 완료" 항목을 수동으로 포함합니다.
 
-### 2.3 토큰 구현 기준 (CSS / Tailwind)
+### 2.4 토큰 구현 기준 (CSS / Tailwind)
 
 ```css
-:root {
+:root,
+:root[data-theme="dark"],
+.dark {
+  --toss-bg: 11 14 20;
+  --toss-surface: 24 27 35;
+  --toss-surfaceHover: 34 38 49;
+  --toss-selected: 30 45 74;
+  --toss-blue: 49 130 246;
+  --toss-onPrimary: 11 14 20;
+  --toss-green: 26 201 126;
+  --toss-yellow: 245 166 35;
+  --toss-red: 240 68 82;
+  --toss-textMain: 242 244 246;
+  --toss-textSub: 139 149 161;
+  --toss-divider: 42 45 54;
   --toss-overlay: 0 0 0;
+}
+
+:root[data-theme="light"],
+.light {
+  --toss-bg: 247 249 252;
+  --toss-surface: 255 255 255;
+  --toss-surfaceHover: 238 242 247;
+  --toss-selected: 232 241 255;
+  --toss-blue: 49 130 246;
+  --toss-onPrimary: 11 14 20;
+  --toss-green: 15 159 110;
+  --toss-yellow: 180 83 9;
+  --toss-red: 217 45 32;
+  --toss-textMain: 25 31 40;
+  --toss-textSub: 107 118 132;
+  --toss-divider: 229 232 235;
+  --toss-overlay: 15 23 42;
 }
 ```
 
@@ -77,17 +128,18 @@ export default {
     extend: {
       colors: {
         toss: {
-          bg: "#0B0E14",
-          surface: "#181B23",
-          surfaceHover: "#222631",
-          selected: "#1E2D4A",
-          blue: "#3182F6",
-          green: "#1AC97E",
-          yellow: "#F5A623",
-          red: "#F04452",
-          textMain: "#F2F4F6",
-          textSub: "#8B95A1",
-          divider: "#2A2D36",
+          bg: "rgb(var(--toss-bg) / <alpha-value>)",
+          surface: "rgb(var(--toss-surface) / <alpha-value>)",
+          surfaceHover: "rgb(var(--toss-surfaceHover) / <alpha-value>)",
+          selected: "rgb(var(--toss-selected) / <alpha-value>)",
+          blue: "rgb(var(--toss-blue) / <alpha-value>)",
+          onPrimary: "rgb(var(--toss-onPrimary) / <alpha-value>)",
+          green: "rgb(var(--toss-green) / <alpha-value>)",
+          yellow: "rgb(var(--toss-yellow) / <alpha-value>)",
+          red: "rgb(var(--toss-red) / <alpha-value>)",
+          textMain: "rgb(var(--toss-textMain) / <alpha-value>)",
+          textSub: "rgb(var(--toss-textSub) / <alpha-value>)",
+          divider: "rgb(var(--toss-divider) / <alpha-value>)",
           overlay: "rgb(var(--toss-overlay) / <alpha-value>)",
         },
       },
@@ -160,7 +212,7 @@ export default {
 
 - 참고: `focus-visible:ring-offset-toss-bg`는 토큰이 CSS 변수 기반으로 정의되어야 안정적으로 동작합니다.
 - 참고: 장식성 아이콘 전용 버튼, 비활성 카드 등 텍스트 가독성 요구가 없는 경우에만 `opacity-40` 축소 표현을 예외적으로 허용합니다.
-- 참고: Solid Primary CTA는 `bg-toss-blue text-toss-bg`를 기본 조합으로 사용하며, `text-tossMain` 버튼 라벨은 금지합니다. 보조 CTA는 `bg-toss-surface text-toss-textMain border border-toss-divider` 조합을 사용합니다.
+- 참고: Solid Primary CTA는 `bg-toss-blue text-toss-onPrimary`를 기본 조합으로 사용하며, `text-tossMain` 버튼 라벨은 금지합니다. 보조 CTA는 `bg-toss-surface text-toss-textMain border border-toss-divider` 조합을 사용합니다.
 
 ### 5.3 폼 컴포넌트 기본 스펙
 
@@ -179,13 +231,47 @@ export default {
 
 ### 5.4 트랜지션 스펙 (Transition Timing)
 
-| 전환 종류                       | Duration  | Easing          | 적용 예시                                       |
-| ------------------------------- | --------- | --------------- | ----------------------------------------------- |
-| 대시보드 → 집중 모드 (Dimming) | `400ms` | `ease-in-out` | 사이드바 opacity, 메인 컨텐츠 fade              |
-| 집중 모드 → 대시보드 (복귀)    | `300ms` | `ease-out`    | Dimming 해제, 요소 재등장                       |
-| Hover 상태 변화                 | `150ms` | `ease-in-out` | 버튼, 리스트 아이템 배경                        |
-| **모달 등장**             | `200ms` | `ease-out`    | 스케일 + 페이드인 (`scale-95 → scale-100`)   |
-| **모달 닫기 (Dismiss)**   | `150ms` | `ease-in`     | 스케일 + 페이드아웃 (`scale-100 → scale-95`) |
+| 전환 종류 | Duration | Easing | 적용 예시 |
+| --- | --- | --- | --- |
+| 대시보드 -> 집중 모드 (Dimming) | `400ms` | `ease-in-out` | 사이드바 opacity 감소, 메인 컨텐츠 fade, 오버레이 `bg-toss-overlay/60` 적용 |
+| 집중 모드 -> 대시보드 (복귀) | `300ms` | `ease-out` | Dimming 해제, 요소 재등장 |
+| 집중 모드 -> 휴식 전환 | `250ms` | `ease-out` | 오버레이 `bg-toss-overlay/20`, Glow 강도 50% 축소 |
+| Hover 상태 변화 | `150ms` | `ease-in-out` | 버튼, 리스트 아이템 배경 |
+| 모달 등장 | `200ms` | `ease-out` | 스케일 + 페이드인 (`scale-95 -> scale-100`) |
+| 모달 닫기 (Dismiss) | `150ms` | `ease-in` | 스케일 + 페이드아웃 (`scale-100 -> scale-95`) |
+| 인증 탭 패널 전환 | `150ms` | `ease-out` | 동일 카드 안에서 `opacity` + `translateX(8px)` 전환 |
+
+### 5.5 타이머 / 집중 상태 컴포넌트
+
+| 상태 | 시각 규칙 | 설명 |
+| --- | --- | --- |
+| `running` | 링/포인트 컬러 `toss-blue`, Glow `0 0 24px rgba(49,130,246,0.32), 0 0 96px rgba(49,130,246,0.18)` | 기본 집중 진행 상태 |
+| `paused` | 배지/배너 컬러 `toss-yellow`, Glow `0 0 18px rgba(245,166,35,0.24), 0 0 48px rgba(245,166,35,0.12)` | Pause 상태 강조 |
+| `warning` | 남은 5분 이하에서 `toss-yellow` 강조 + 점 또는 링 `animate-pulse` 허용 | 종료 임박 상태 |
+| `completed` | 링/강조 컬러 `toss-green`, Glow `0 0 20px rgba(26,201,126,0.28), 0 0 72px rgba(26,201,126,0.16)` | 집중 완료 직후 보상 전환 상태 |
+
+- 타이머 Glow는 원형 링과 후면 halo에만 적용하고, 텍스트 본문에는 직접 적용하지 않습니다.
+- 집중 모드 진입 시 오버레이 목표값은 `bg-toss-overlay/60`이며, 휴식 화면에서는 `bg-toss-overlay/20`으로 완화합니다.
+- Pause 상태에서 타이머 숫자 색상은 `toss-textMain`을 유지하고, 상태 판단은 배지/배너/링 포인트 색으로 전달합니다.
+
+### 5.6 Alert / Banner / Toast 스펙
+
+| 컴포넌트 | 기본 규칙 | 위치 / dismiss |
+| --- | --- | --- |
+| Inline Alert | `rounded-2xl border p-4 bg-toss-surface text-toss-textMain` | 화면 내 고정 배치, 액션 필요 시 자동 dismiss 없음 |
+| Pause Banner | `border border-toss-yellow/30 bg-toss-surface min-h-14 rounded-2xl px-4 py-3` | 타이머 상단 중앙, Pause 중 지속 노출 |
+| Success Toast | `border border-toss-green/30 bg-toss-surface text-toss-textMain` | 데스크탑 `top-6 right-6`, 모바일 `left-4 right-4 bottom-24`, `3500ms` 후 자동 dismiss |
+| Warning Toast | `border border-toss-yellow/30 bg-toss-surface text-toss-textMain` | 같은 위치 규칙, `4000ms` 후 자동 dismiss |
+| Error Toast | `border border-toss-red/30 bg-toss-surface text-toss-textMain` | 사용자가 확인할 때까지 유지, 닫기 버튼 제공 |
+
+- 토스트는 짧은 상태 피드백에 사용하고, 재시도/최신 상태 반영 같은 의사결정이 필요한 오류는 Inline Alert를 우선 사용합니다.
+- 토스트 아이콘은 `check_circle`, `warning`, `error`를 우선 사용합니다.
+
+### 5.7 Reward 강조 요소
+
+- 기본 보상 아이콘은 `forest`, 배경은 `bg-toss-green/10`, 아이콘/텍스트는 `text-toss-green`을 사용합니다.
+- 레벨업 배지는 `military_tech`, 배경은 `bg-toss-blue/10`, 아이콘/텍스트는 `text-toss-blue`를 사용합니다.
+- 레벨업은 별도 오버레이를 띄우지 않고, 동일 보상 모달/바텀시트 내부에서 배지와 문구가 확장 노출되는 방식을 기본값으로 합니다.
 
 ---
 
@@ -260,7 +346,7 @@ PRD 대상 환경: **모바일/데스크탑 웹 (반응형)**
 - `Pretendard Variable` 로딩 방식과 `font-display: swap` 적용 여부를 구현 전에 확정한다.
 - 본문 텍스트는 4.5:1 이상 대비를 만족하는 조합만 사용한다.
 - `toss-blue`는 일반 텍스트 색상으로 사용하지 않고, CTA 배경/보더/포커스 링/아이콘 포인트에 한정한다.
-- Solid Primary CTA는 `bg-toss-blue text-toss-bg` 조합을 사용한다.
+- Solid Primary CTA는 `bg-toss-blue text-toss-onPrimary` 조합을 사용한다.
 - 폼 컴포넌트는 Error, Focus Visible, Disabled 상태를 모두 구현한다.
 - placeholder는 `opacity-70` 기준을 우선하고, 대안 표기는 `#8B95A1B3`만 허용한다.
 - Checkbox/Radio/Toggle은 44x44px 이상 터치 타겟을 보장한다.
@@ -268,3 +354,6 @@ PRD 대상 환경: **모바일/데스크탑 웹 (반응형)**
 - 모바일은 Bottom Sheet, 태블릿은 센터 모달 우선 규칙을 따른다.
 - 모바일에서는 커스텀 스크롤바를 적용하지 않는다.
 - 구현 후 대비비 검증 결과를 리뷰 문서에 기록한다.
+- 화면 의미 단위 데이터 필드, 상태 enum, KPI 발화 조건은 구현 전에 `ui_data_contract.md` 기준으로 다시 확인한다.
+
+

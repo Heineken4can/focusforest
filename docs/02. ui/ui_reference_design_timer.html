@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko" class="dark">
 
 <head>
@@ -27,6 +27,7 @@
                             surfaceHover: '#222631',
                             selected: '#1E2D4A',
                             blue: '#3182F6',
+                            onPrimary: '#0B0E14',
                             green: '#1AC97E',
                             red: '#F04452',
                             textMain: '#F2F4F6',
@@ -97,7 +98,7 @@
         <nav class="flex flex-col gap-8">
             <span class="material-symbols-rounded text-toss-textSub text-2xl">home</span>
             <span class="material-symbols-rounded text-toss-blue text-2xl">timer</span>
-            <span class="material-symbols-rounded text-toss-textSub text-2xl">bar_chart</span>
+            <span class="material-symbols-rounded text-toss-textSub text-2xl">person</span>
         </nav>
     </aside>
 
@@ -156,15 +157,9 @@
                 <!-- Pause (Primary) -->
                 <button class="flex-[1.5] font-bold py-4 px-4 lg:px-6 rounded-2xl flex items-center justify-center gap-2 transition-all duration-150
                                hover:bg-blue-600 active:scale-95"
-                    style="background:#3182F6; color:white; box-shadow:0 4px 14px 0 rgba(49,130,246,0.39)">
+                    style="background:#3182F6; color:#0B0E14; box-shadow:0 4px 14px 0 rgba(49,130,246,0.39)">
                     <span class="material-symbols-rounded">pause</span>
                     <span class="text-sm lg:text-base">일시정지</span>
-                </button>
-
-                <!-- Skip -->
-                <button
-                    class="w-14 h-14 lg:w-16 lg:h-16 bg-toss-surface hover:bg-toss-surfaceHover text-toss-textSub hover:text-toss-textMain rounded-2xl flex items-center justify-center transition-colors duration-150 border border-toss-divider flex-shrink-0">
-                    <span class="material-symbols-rounded">skip_next</span>
                 </button>
             </div>
 
@@ -213,7 +208,7 @@
             <span class="text-sm">포기하기</span>
         </button>
         <button class="flex-[1.5] font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2"
-            style="background:#3182F6; color:white;">
+            style="background:#3182F6; color:#0B0E14;">
             <span class="material-symbols-rounded text-sm">pause</span>
             <span class="text-sm">일시정지</span>
         </button>
