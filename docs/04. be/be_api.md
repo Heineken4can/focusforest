@@ -6,6 +6,7 @@
 | v1.1 | 2026-03-10 | BE-Plan | 구현 착수용 API 계약 구체화, 세션/휴식 상태 전이 및 오류 코드 보강 |
 | v1.2 | 2026-03-12 | BE-Plan | metrics/events 계약 추가, reward streak V1 제외, rate limit 정책 정합화 |
 | v1.3 | 2026-03-12 | BE-Plan | UI 계약 기준 start/bootstrap 응답 범위, conflict payload, KPI dedupe, timezone 정책 확정 |
+| v1.4 | 2026-03-12 | BE-Plan | Auth 429 오류 코드, CSRF 쿠키 전달 경로, Pause timeout 정합화 반영 |
 
 ## 참조 문서
 
@@ -19,7 +20,7 @@
 - **Base Path**: `/api/v1`
 - **인증 방식**:
   - 기본: Bearer Access Token (Authorization 헤더)
-  - `auth/refresh`, `auth/logout`: HttpOnly Refresh Cookie + `X-CSRF-Token` 헤더 검증 (double-submit 패턴)
+  - `auth/refresh`, `auth/logout`: HttpOnly `refreshToken` Cookie + non-HttpOnly `csrfToken` Cookie 값을 반영한 `X-CSRF-Token` 헤더 검증 (double-submit 패턴)
 - **문서화 방식**: Swagger(OpenAPI), 개발 서버 `/api-docs`
 - **시간 필드 형식**: 모든 datetime 필드는 UTC ISO 8601 (`2026-03-10T08:30:00Z`) 문자열을 사용한다.
 - **낙관적 잠금 필드**: Task, FocusSession, Profile, Setting 변경 요청은 최신 `version`을 포함해야 한다.
@@ -105,6 +106,7 @@
 | `AUTH_401_UNAUTHORIZED` | 인증 실패 |
 | `AUTH_401_REFRESH_REVOKED` | refresh token 무효 또는 회전 후 폐기됨 |
 | `AUTH_403_CSRF_INVALID` | CSRF 검증 실패 |
+| `AUTH_429_RATE_LIMIT` | Auth 엔드포인트(`signup`, `login`, `refresh`) rate limit 초과 |
 | `TASK_409_ACTIVE_LOCK` | 진행 중 세션이 연결된 Task라 수정/삭제 불가 |
 | `TASK_409_COMPLETED` | 완료된 Task는 집중 시작 또는 핵심 과제 지정 불가 |
 | `SESSION_409_ALREADY_RUNNING` | 동일 사용자에게 이미 진행 중인 집중/휴식 세션이 존재 |
@@ -126,6 +128,7 @@ Rate Limiting 대상 엔드포인트는 Auth, Metrics, Sync 계열로 나뉘며,
 - 대상: `signup`, `login`, `refresh`
 - 목적: brute force 방지
 - 기준: 더 낮은 한도 적용 (환경변수 `AUTH_RATE_LIMIT_MAX`, `AUTH_RATE_LIMIT_WINDOW_SEC`로 제어)
+- 초과 시 오류 코드는 `AUTH_429_RATE_LIMIT`를 사용한다.
 
 ### 4.2 Metrics 엔드포인트
 
@@ -155,7 +158,8 @@ Rate Limiting 대상 엔드포인트는 Auth, Metrics, Sync 계열로 나뉘며,
 |------|----|
 | Request Body | `email: string(email)`, `password: string(8~72)`, `displayName: string(1~24)`, `timezone?: string(IANA TZ)` |
 | Success `data` | `user: { id, email, displayName, timezone, createdAt }`, `accessToken`, `accessTokenExpiresAt` |
-| 비고 | Refresh Token은 HttpOnly Cookie로 설정, 응답 바디에는 포함하지 않음 |
+| Error | `AUTH_429_RATE_LIMIT` |
+| 비고 | 서버는 `refreshToken`을 HttpOnly Cookie로, `csrfToken`을 non-HttpOnly Cookie로 함께 설정한다. 응답 바디에는 두 토큰을 포함하지 않으며, FE는 `csrfToken` cookie 값을 읽어 `X-CSRF-Token` 헤더로 전달한다. |
 
 #### `POST /auth/login`
 
@@ -163,7 +167,8 @@ Rate Limiting 대상 엔드포인트는 Auth, Metrics, Sync 계열로 나뉘며,
 |------|----|
 | Request Body | `email: string(email)`, `password: string` |
 | Success `data` | `user: { id, email, displayName, timezone }`, `accessToken`, `accessTokenExpiresAt`, `bootstrapRequired: boolean` |
-| 비고 | 로그인 성공 직후 FE는 로컬 데이터가 있으면 `sync/bootstrap`을 호출한다 |
+| Error | `AUTH_429_RATE_LIMIT` |
+| 비고 | 로그인 성공 시 서버는 `refreshToken` HttpOnly Cookie와 `csrfToken` Cookie를 함께 설정한다. FE는 로컬 데이터가 있으면 `sync/bootstrap`을 호출하고, 이후 `auth/refresh`, `auth/logout`에서는 `csrfToken` cookie 값을 `X-CSRF-Token` 헤더로 실어 보낸다. |
 
 #### `POST /auth/refresh`
 
@@ -172,7 +177,8 @@ Rate Limiting 대상 엔드포인트는 Auth, Metrics, Sync 계열로 나뉘며,
 | Header | `X-CSRF-Token: string` |
 | Cookie | `refreshToken=<httpOnly>` |
 | Success `data` | `accessToken`, `accessTokenExpiresAt` |
-| Error | `AUTH_401_REFRESH_REVOKED`, `AUTH_403_CSRF_INVALID` |
+| Error | `AUTH_401_REFRESH_REVOKED`, `AUTH_403_CSRF_INVALID`, `AUTH_429_RATE_LIMIT` |
+| 비고 | 성공 시 서버는 refresh token rotation과 함께 `refreshToken`, `csrfToken` 쿠키를 모두 재발급한다. 요청 헤더 값은 현재 `csrfToken` cookie 값과 정확히 일치해야 한다. |
 
 #### `POST /auth/logout`
 
@@ -182,6 +188,7 @@ Rate Limiting 대상 엔드포인트는 Auth, Metrics, Sync 계열로 나뉘며,
 | Cookie | `refreshToken=<httpOnly>` |
 | Success `data` | `revoked: true` |
 | Error | `AUTH_403_CSRF_INVALID` |
+| 비고 | 성공 시 서버는 `refreshToken`, `csrfToken` 쿠키를 모두 만료 처리한다. |
 
 ### 5.2 Task
 

@@ -1,0 +1,202 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TaskStatus {
+  PENDING
+  COMPLETED
+}
+
+enum SessionStatus {
+  RUNNING
+  PAUSED
+  COMPLETED
+  BREAK_RUNNING
+  BREAK_COMPLETED
+  BREAK_SKIPPED
+  GIVEN_UP
+  GIVEN_UP_TIMEOUT
+}
+
+enum ThemeMode {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+enum MetricEventName {
+  APP_FIRST_OPEN
+  AUTH_SIGNUP_SUCCESS
+  AUTH_LOGIN_SUCCESS
+  DASHBOARD_TASK_SET
+  FOCUS_SESSION_COMPLETED
+  REWARD_GRANTED_FIRST_TIME
+}
+
+model User {
+  id                  String                 @id @default(uuid()) @db.Uuid
+  email               String                 @unique @db.VarChar(255)
+  passwordHash        String
+  displayName         String                 @db.VarChar(24)
+  avatarUrl           String?
+  version             Int                    @default(1)
+  createdAt           DateTime               @default(now()) @db.Timestamptz(6)
+  updatedAt           DateTime               @updatedAt @db.Timestamptz(6)
+  settings            UserSetting?
+  refreshTokens       RefreshToken[]
+  tasks               Task[]
+  focusSessions       FocusSession[]
+  rewardLedgers       RewardLedger[]
+  progressSnapshot    UserProgressSnapshot?
+  dailyFocusStats     DailyFocusStat[]
+  productMetricEvents ProductMetricEvent[]
+  syncCursors         SyncCursor[]
+}
+
+model UserSetting {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @unique @db.Uuid
+  theme       ThemeMode @default(SYSTEM)
+  timezone    String    @default("Asia/Seoul") @db.VarChar(100)
+  syncEnabled Boolean   @default(true)
+  version     Int       @default(1)
+  createdAt   DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @db.Timestamptz(6)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model RefreshToken {
+  id         String    @id @default(uuid()) @db.Uuid
+  userId     String    @db.Uuid
+  tokenHash  String    @db.VarChar(255)
+  deviceInfo String?   @db.VarChar(255)
+  expiresAt  DateTime  @db.Timestamptz(6)
+  createdAt  DateTime  @default(now()) @db.Timestamptz(6)
+  revokedAt  DateTime? @db.Timestamptz(6)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "idx_refresh_token_user")
+  @@index([expiresAt], map: "idx_refresh_token_expires_active")
+}
+
+model Task {
+  id                String         @id @default(uuid()) @db.Uuid
+  userId            String         @db.Uuid
+  clientGeneratedId String?        @unique(map: "uq_task_client_generated_id") @db.Uuid
+  title             String         @db.VarChar(120)
+  description       String?
+  status            TaskStatus     @default(PENDING)
+  isCore            Boolean        @default(false)
+  version           Int            @default(1)
+  createdAt         DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime       @updatedAt @db.Timestamptz(6)
+  deletedAt         DateTime?      @db.Timestamptz(6)
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  focusSessions     FocusSession[]
+
+  @@index([userId, status, updatedAt(sort: Desc)], map: "idx_task_user_visible_updated")
+}
+
+model FocusSession {
+  id                  String               @id @default(uuid()) @db.Uuid
+  userId              String               @db.Uuid
+  taskId              String               @db.Uuid
+  clientGeneratedId   String?              @unique(map: "uq_focus_session_client_generated_id") @db.Uuid
+  status              SessionStatus        @default(RUNNING)
+  plannedFocusSec     Int                  @default(1500)
+  startedAt           DateTime             @default(now()) @db.Timestamptz(6)
+  pauseStartedAt      DateTime?            @db.Timestamptz(6)
+  pauseDeadlineAt     DateTime?            @db.Timestamptz(6)
+  pauseCount          Int                  @default(0)
+  focusEndedAt        DateTime?            @db.Timestamptz(6)
+  givenUpAt           DateTime?            @db.Timestamptz(6)
+  breakStartedAt      DateTime?            @db.Timestamptz(6)
+  breakEndsAt         DateTime?            @db.Timestamptz(6)
+  breakEndedAt        DateTime?            @db.Timestamptz(6)
+  version             Int                  @default(1)
+  createdAt           DateTime             @default(now()) @db.Timestamptz(6)
+  updatedAt           DateTime             @updatedAt @db.Timestamptz(6)
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task                Task                 @relation(fields: [taskId], references: [id], onDelete: Restrict)
+  rewardLedger        RewardLedger?
+  productMetricEvents ProductMetricEvent[]
+
+  @@index([userId, status, pauseDeadlineAt], map: "idx_focus_session_user_status_pause")
+}
+
+model RewardLedger {
+  id                  String               @id @default(uuid()) @db.Uuid
+  userId              String               @db.Uuid
+  sourceSessionId     String               @unique @db.Uuid
+  spAmount            Int
+  treeCount           Int                  @default(1)
+  description         String?
+  createdAt           DateTime             @default(now()) @db.Timestamptz(6)
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sourceSession       FocusSession         @relation(fields: [sourceSessionId], references: [id], onDelete: Restrict)
+  productMetricEvents ProductMetricEvent[]
+
+  @@index([userId, createdAt(sort: Desc)], map: "idx_reward_ledger_user_created")
+}
+
+model UserProgressSnapshot {
+  id                     String   @id @default(uuid()) @db.Uuid
+  userId                 String   @unique @db.Uuid
+  totalSp                Int      @default(0)
+  currentLevel           Int      @default(1)
+  totalCompletedSessions Int      @default(0)
+  updatedAt              DateTime @updatedAt @db.Timestamptz(6)
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DailyFocusStat {
+  id                String   @id @default(uuid()) @db.Uuid
+  userId            String   @db.Uuid
+  statDate          DateTime @db.Date
+  focusedSeconds    Int      @default(0)
+  completedSessions Int      @default(0)
+  plantedTrees      Int      @default(0)
+  createdAt         DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime @updatedAt @db.Timestamptz(6)
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, statDate], map: "uq_daily_focus_stat_user_date")
+  @@index([userId, statDate], map: "idx_daily_focus_stat_user_date")
+}
+
+model ProductMetricEvent {
+  eventId         String          @id @db.Uuid
+  userId          String?         @db.Uuid
+  focusSessionId  String?         @db.Uuid
+  rewardLedgerId  String?         @db.Uuid
+  deviceId        String          @db.VarChar(255)
+  eventName       MetricEventName
+  dedupeKey       String?         @db.VarChar(255)
+  occurredAt      DateTime        @db.Timestamptz(6)
+  payload         Json?
+  createdAt       DateTime        @default(now()) @db.Timestamptz(6)
+  user            User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  focusSession    FocusSession?   @relation(fields: [focusSessionId], references: [id], onDelete: SetNull)
+  rewardLedger    RewardLedger?   @relation(fields: [rewardLedgerId], references: [id], onDelete: SetNull)
+
+  @@index([eventName, occurredAt(sort: Desc)], map: "idx_metric_event_name_occurred")
+  @@index([userId, occurredAt(sort: Desc)], map: "idx_metric_event_user_occurred")
+  @@index([deviceId, occurredAt(sort: Desc)], map: "idx_metric_event_device_occurred")
+  @@unique([eventName, dedupeKey], map: "uq_metric_event_name_dedupe_key")
+}
+
+model SyncCursor {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @db.Uuid
+  deviceId   String   @db.VarChar(255)
+  lastCursor String   @db.VarChar(255)
+  updatedAt  DateTime @updatedAt @db.Timestamptz(6)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, deviceId], map: "uq_sync_cursor_user_device")
+}

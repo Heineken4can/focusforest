@@ -1,4 +1,4 @@
-﻿# Focus Forest 소프트웨어 아키텍처
+# Focus Forest 소프트웨어 아키텍처
 
 | 버전 | 날짜 | 작성자 | 변경 내용 |
 |------|------|--------|-----------|
@@ -6,6 +6,7 @@
 | v2.0 | 2026-03-12 | BE-Plan | 상위 조감 문서로 재편, 중복 상세 제거, 역할별 정본 링크 허브화 |
 | v2.1 | 2026-03-12 | BE-Plan | 문서 템플릿 정규화, 참조 문서 절 추가 |
 | v2.2 | 2026-03-12 | BE-Plan | UI 계약 기준 V1 enum, start/bootstrap 응답 범위, conflict/dedupe/timezone 정책 고정 |
+| v2.3 | 2026-03-12 | BE-Plan | Auth CSRF/429 및 Pause timeout sweeper 요약 정합화 |
 
 ## 참조 문서
 - `docs/01. po/PRD_FocusForest.md`
@@ -204,6 +205,7 @@ flowchart LR
 
 - 집중 세션은 완료된 Task에서 시작할 수 없고, 사용자당 활성 세션은 1개만 허용한다.
 - Pause는 세션당 최대 1회, 최대 5분이다.
+- Pause timeout 강제는 요청 시점 재검증과 1분 주기 sweeper를 함께 사용하며, 상세 규칙은 [docs/04. be/be_design.md](../04. be/be_design.md)를 따른다.
 - `startFocusSession` 성공 응답은 집중 화면 즉시 진입에 필요한 `activeSession`, `currentTask`, `sidebarSummary`, `nextTaskCandidates(max 2)`, `policy`만 포함한다.
 - 표준 뽀모도로 UX는 `complete -> start-break -> complete-break/skip-break` 호출 체인으로 구성한다.
 - 보상 정산은 세션 완료 트랜잭션 안에서 `RewardLedger`, `DailyFocusStat`, `UserProgressSnapshot`을 함께 갱신한다.
@@ -218,8 +220,9 @@ flowchart LR
 ### 6.5 보안 및 운영 정책
 
 - Access Token은 브라우저 메모리 전용, Refresh Token은 HttpOnly Secure Cookie를 사용한다.
-- `auth/refresh`, `auth/logout`는 CSRF double-submit 검증을 적용한다.
+- `signup`, `login`, `refresh` 성공 시 서버는 `refreshToken` HttpOnly Cookie와 `csrfToken` Cookie를 함께 발급/회전하고, `auth/refresh`, `auth/logout`는 CSRF double-submit 검증을 적용한다.
 - 운영 환경의 rate limit, refresh token, idempotency, sync 중복 제어는 Redis를 필수 사용한다.
+- Auth rate limit 초과는 `AUTH_429_RATE_LIMIT`, Sync/Metrics rate limit 초과는 `SYNC_429_RATE_LIMIT`을 사용한다.
 - timezone 변경 시 과거 `DailyFocusStat`/UI `DailySummary`를 소급 재집계하지 않는다. 변경 이후 완료 세션부터 새 timezone 기준을 적용한다.
 - 상세 보안/NFR/운영 기준은 [docs/04. be/be_design.md](../04. be/be_design.md)와 [docs/04. be/be_plan.md](../04. be/be_plan.md)를 따른다.
 

@@ -1,5 +1,5 @@
 ---
-name: agent-loop-prompt-writer
+name: sk-agent-loop-prompt-writer
 description: |
   이 저장소에서 반복형 서브에이전트 실행 프롬프트를 생성하는 스킬.
   현재 대화, 리뷰 findings, 문서 소유권 규칙을 바탕으로 `be-plan/be-rv`,
@@ -210,7 +210,7 @@ UI 문서에 확정된 항목이 아직 `미정 / 추가 정의 필요`로 남�
 
 ## 트리거
 
-- `$agent-loop-prompt-writer`
+- `$sk-agent-loop-prompt-writer`
 - "BE 루프용 프롬프트 세트 작성해줘"
 - "리뷰 결과 반영용 수정 프롬프트 만들어줘"
 - "지금 대화 기준으로 서브에이전트 프롬프트 정리해줘"

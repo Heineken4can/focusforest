@@ -1,0 +1,176 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root,
+  :root[data-theme='dark'],
+  .dark {
+    --toss-bg: 11 14 20;
+    --toss-surface: 24 27 35;
+    --toss-surfaceHover: 34 38 49;
+    --toss-selected: 30 45 74;
+    --toss-blue: 49 130 246;
+    --toss-onPrimary: 11 14 20;
+    --toss-green: 26 201 126;
+    --toss-yellow: 245 166 35;
+    --toss-red: 240 68 82;
+    --toss-textMain: 242 244 246;
+    --toss-textSub: 139 149 161;
+    --toss-divider: 42 45 54;
+    --toss-overlay: 0 0 0;
+  }
+
+  :root[data-theme='light'],
+  .light {
+    --toss-bg: 247 249 252;
+    --toss-surface: 255 255 255;
+    --toss-surfaceHover: 238 242 247;
+    --toss-selected: 232 241 255;
+    --toss-blue: 49 130 246;
+    --toss-onPrimary: 11 14 20;
+    --toss-green: 15 159 110;
+    --toss-yellow: 180 83 9;
+    --toss-red: 217 45 32;
+    --toss-textMain: 25 31 40;
+    --toss-textSub: 107 118 132;
+    --toss-divider: 229 232 235;
+    --toss-overlay: 15 23 42;
+  }
+
+  html {
+    font-family:
+      'Pretendard Variable',
+      Pretendard,
+      'Apple SD Gothic Neo',
+      'Noto Sans KR',
+      system-ui,
+      sans-serif;
+    background-color: rgb(var(--toss-bg));
+    color: rgb(var(--toss-textMain));
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply m-0 min-h-screen bg-toss-bg text-toss-textMain;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  button {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-toss-blue focus-visible:ring-offset-2 focus-visible:ring-offset-toss-bg;
+  }
+
+  a {
+    @apply text-inherit no-underline;
+  }
+
+  #root {
+    @apply min-h-screen;
+  }
+
+  /* Enable this block once Pretendard Variable is self-hosted in public/fonts. */
+  /*
+  @font-face {
+    font-family: 'Pretendard Variable';
+    src: url('/fonts/PretendardVariable.woff2') format('woff2');
+    font-display: swap;
+  }
+  */
+}
+
+@layer components {
+  .skip-link {
+    @apply absolute left-4 top-4 z-toast -translate-y-20 rounded-full bg-toss-blue px-4 py-2 text-sm font-semibold text-toss-onPrimary transition-transform;
+  }
+
+  .skip-link:focus {
+    @apply translate-y-0;
+  }
+
+  .surface-panel {
+    @apply rounded-2xl border border-toss-divider bg-toss-surface p-5;
+  }
+
+  .surface-panel-hover {
+    @apply rounded-2xl border border-toss-divider bg-toss-surface p-5 transition-colors duration-150 hover:bg-toss-surfaceHover;
+  }
+
+  .button-primary {
+    @apply inline-flex min-h-11 items-center justify-center rounded-2xl bg-toss-blue px-4 py-3 text-sm font-semibold text-toss-onPrimary transition-colors duration-150 hover:bg-toss-blue/90;
+  }
+
+  .button-secondary {
+    @apply inline-flex min-h-11 items-center justify-center rounded-2xl border border-toss-divider bg-toss-surface px-4 py-3 text-sm font-semibold text-toss-textMain transition-colors duration-150 hover:bg-toss-surfaceHover;
+  }
+
+  .button-ghost {
+    @apply inline-flex min-h-11 items-center justify-center rounded-2xl px-4 py-3 text-sm font-semibold text-toss-textSub transition-colors duration-150 hover:bg-toss-surfaceHover hover:text-toss-textMain;
+  }
+
+  .icon-button {
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-full border border-toss-divider bg-toss-surface text-sm font-semibold text-toss-textMain transition-colors duration-150 hover:bg-toss-surfaceHover;
+  }
+
+  .field-shell {
+    @apply h-12 rounded-xl border border-toss-divider bg-toss-surface px-4 text-sm text-toss-textMain placeholder:text-toss-textSub placeholder:opacity-70;
+  }
+
+  .status-badge {
+    @apply inline-flex items-center rounded-full border border-toss-divider bg-toss-surface px-3 py-1 text-xs font-semibold uppercase tracking-[0.01em] text-toss-textSub;
+  }
+
+  .placeholder-line {
+    @apply h-3 rounded-full bg-toss-divider/60;
+  }
+
+  .timer-frame {
+    @apply mx-auto flex aspect-square w-full max-w-[20rem] items-center justify-center rounded-full border border-toss-blue/40 bg-toss-selected shadow-focus;
+  }
+
+  .timer-digits {
+    @apply text-center text-timer font-extrabold text-toss-textMain;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@media (min-width: 640px) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--toss-divider)) rgb(var(--toss-bg));
+  }
+
+  *::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: rgb(var(--toss-bg));
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: rgb(var(--toss-divider));
+    border-radius: 9999px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--toss-divider) / 0.85);
+  }
+}

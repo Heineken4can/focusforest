@@ -5,6 +5,7 @@
 | v1.0 | 2026-03-10 | BE-Plan | architecture.md v1.3에서 분리 + 태스크 분해 신규 작성 |
 | v1.1 | 2026-03-10 | BE-Plan | API 계약 상세화, 세션 시작/휴식 종료 흐름, 문서 참조 정합성 보강 |
 | v1.2 | 2026-03-12 | BE-Plan | 상위 architecture 재편 반영, metrics 수집과 V1 범위 정합성 보강 |
+| v1.3 | 2026-03-12 | BE-Plan | Auth 429/CSRF 전달 경로 및 Pause timeout sweeper 정합화 반영 |
 
 ## 참조 문서
 
@@ -37,9 +38,9 @@
 |---|--------|------|
 | 2-1 | Auth Module 스캐폴딩 | Controller -> Service -> Repository 계층 |
 | 2-2 | 회원가입 | Argon2id 비밀번호 해시, DTO 검증 |
-| 2-3 | 로그인 | JWT Access Token 발급 + Refresh Token (HttpOnly Secure SameSite=Strict Cookie) |
-| 2-4 | 토큰 Rotation | `POST /auth/refresh` — rotation + 이전 token revoke |
-| 2-5 | 로그아웃 | Refresh token 폐기, CSRF 검증 |
+| 2-3 | 로그인 | JWT Access Token 발급 + Refresh Token (HttpOnly Secure SameSite=Strict Cookie) + `csrfToken` Cookie 발급 |
+| 2-4 | 토큰 Rotation | `POST /auth/refresh` — `refreshToken`/`csrfToken` 동시 rotation + 이전 token revoke |
+| 2-5 | 로그아웃 | Refresh token 폐기, `refreshToken`/`csrfToken` Cookie 만료, CSRF 검증 |
 | 2-6 | JWT Guard | 전역 인증 Guard, Public 데코레이터 |
 | 2-7 | Rate Limiting | Auth 엔드포인트 rate limit (Redis 기반), 환경변수 임계값 |
 
@@ -194,6 +195,7 @@ idempotency key는 be_design.md 10.1절 전략을 따르며, Redis 기록 실패
 - 타이머 초 단위 카운트다운은 서버 스트리밍 없이 로컬 계산
 - theme/timezone/동기화 상태는 설정 화면과 연결
 - Access Token은 메모리 보관, Refresh Token은 HttpOnly Secure SameSite=Strict Cookie 사용
+- `signup`, `login`, `refresh` 성공 시 서버는 non-HttpOnly `csrfToken` Cookie를 함께 설정/회전하며, FE는 이 값을 읽어 `X-CSRF-Token` 헤더로 `auth/refresh`, `auth/logout` 요청에 전달한다.
 - silent refresh는 Access Token 만료로 인한 첫 `401` 수신 시 1회 시도하고, 실패 시 로그인 화면으로 이동
 - 익명 KPI 이벤트는 인증 동기화 outbox와 별도 metrics queue로 관리하고, 온라인 복귀 시 `POST /api/v1/metrics/events`로 재전송한다.
 - 세션 상태 매핑:
@@ -207,6 +209,7 @@ idempotency key는 be_design.md 10.1절 전략을 따르며, Redis 기록 실패
   - `GIVEN_UP_TIMEOUT`: Pause 시간 초과 포기 처리
 - 표준 뽀모도로 UX에서는 `complete -> start-break -> complete-break/skip-break` 호출을 사용자에게 보이지 않게 연쇄 실행한다.
 - 주요 에러 대응:
+  - `AUTH_429_RATE_LIMIT`: 회원가입/로그인/토큰 재발급 요청 제한 초과 시 재시도 대기 UX와 안내 문구 표시
   - `AUTH_401_REFRESH_REVOKED`: 세션 종료 후 로그인 화면 이동
   - `SYNC_409_CONFLICT`: `serverSnapshot`으로 교체 후 최신 상태 표시
   - `TASK_409_COMPLETED`: 완료 과제의 집중 시작 버튼 비활성화 유지 + 서버 메시지 노출

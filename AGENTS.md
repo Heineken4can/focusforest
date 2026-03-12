@@ -54,3 +54,4 @@
 | sk-doc-normalizer-ko | `.agents/skills/sk-doc-normalizer-ko/SKILL.md` | `$sk-doc-normalizer-ko`, `/sk-doc-normalize [파일명]`, 또는 "문서 포맷 정규화해줘" |
 | sk-top-doc-compressor | `.agents/skills/sk-top-doc-compressor/SKILL.md` | `$sk-top-doc-compressor`, `/sk-compress-top-doc [파일명]`, 또는 "상위 문서 압축해줘" |
 | sk-contract-propagation | `.agents/skills/sk-contract-propagation/SKILL.md` | `$sk-contract-propagation`, `/sk-propagate-contract "[변경사항]"`, 또는 "이 변경사항 파급 반영 범위 정리해줘" |
+| sk-agent-loop-prompt-writer | `.agents/skills/sk-agent-loop-prompt-writer/SKILL.md` | `$sk-agent-loop-prompt-writer`, "BE 루프용 프롬프트 세트 작성해줘" 등 |

@@ -5,6 +5,7 @@
 | v1.0 | 2026-03-10 | BE-Plan | architecture.md v1.3 분리 |
 | v1.1 | 2026-03-10 | BE-Plan | 세션 시작 가드, break 종료 계약, idempotency 범위 보강 |
 | v1.2 | 2026-03-12 | BE-Plan | UI 계약 기준 V1 enum, start/bootstrap 응답 범위, conflict/dedupe/timezone 정책 확정 |
+| v1.3 | 2026-03-12 | BE-Plan | Auth 429/CSRF 전달 경로, Pause timeout sweeper 권위 문서화 |
 
 ## 참조 문서
 
@@ -215,6 +216,7 @@ flowchart LR
 
 - 회원가입, 로그인, 로그아웃, 토큰 재발급
 - Access/Refresh 토큰 발급 및 rotation
+- `refreshToken` HttpOnly Cookie와 `csrfToken` Cookie 발급/회전/폐기
 - Refresh token 해시 저장 및 revocation
 - Guard 전략, 인증 실패 코드 표준화
 
@@ -231,6 +233,7 @@ flowchart LR
 - 집중 세션 시작, Pause, Resume, Give Up, Complete, Start Break, Complete Break, Skip Break
 - 동일 사용자당 활성 세션 1개 제한 (`RUNNING`, `PAUSED`, `BREAK_RUNNING`)
 - Pause 최대 1회 / 5분 제한 정책
+- Pause timeout sweeper를 통한 `GIVEN_UP_TIMEOUT` 상태 마킹
 - 세션 시작 성공 시 집중 화면 즉시 진입용 `activeSession`, `currentTask`, `sidebarSummary`, `nextTaskCandidates(max 2)`, `policy` 반환
 - 세션 상태 전환의 idempotency 보장
 - 보상 지급을 위한 Reward Module 호출 트리거
@@ -394,7 +397,9 @@ Pause 정책은 클라이언트와 서버가 함께 책임지는 **하이브리�
 3. 서버는 세션 레코드에 `pauseStartedAt`, `pauseDeadlineAt`, `pauseCount`, `status=PAUSED`를 저장한다.
 4. 서버는 두 번째 Pause 요청을 받으면 `SESSION_409_PAUSE_LIMIT`으로 거절한다. 따라서 클라이언트 우회 호출로도 정책을 깨지 못한다.
 5. 클라이언트가 활성 상태라면 `pauseDeadlineAt` 도달 시 자동으로 give-up 처리 UI를 수행하고, 온라인이면 `POST /api/v1/focus-sessions/:id/give-up`를 호출한다. 오프라인이면 로컬 상태를 `GIVEN_UP_TIMEOUT`으로 마킹한 뒤 재연결 시 동기화한다.
-6. 서버는 `resume`, `complete`, `pull`, `push` 요청 시 `pauseDeadlineAt` 초과 여부를 다시 검증한다.
+6. 서버는 `resume`, `complete`, `pull`, `push` 요청 시 `pauseDeadlineAt` 초과 여부를 다시 검증하는 on-request lazy validation을 수행한다.
+7. 운영 환경에서는 `NestJS ScheduleModule` 기반 1분 주기 Pause timeout sweeper를 함께 운용한다. sweeper는 Redis 분산 락(`lock:focus-session-timeout-sweeper`)을 획득한 단일 인스턴스에서만 실행된다.
+8. sweeper는 `WHERE status = 'PAUSED' AND pauseDeadlineAt < now()` 조건을 만족하는 세션을 `GIVEN_UP_TIMEOUT`으로 상태 마킹만 하며, 보상 지급이나 알림 발송 같은 부수 효과는 수행하지 않는다.
 
 > 비즈니스 정책값(집중 25분, 휴식 5분, Pause 상한 5분 등)은 PRD 3.2절 참조. 서버는 해당 값을 환경 설정 또는 상수로 관리하며 정책 검증 시 사용한다.
 
@@ -601,6 +606,7 @@ idem:{userId}:{resourceType}:{resourceId}:{action}:{eventId}
 - CORS 허용 Origin 명시
 - 비밀번호는 Argon2id 해시
 - Refresh Token은 **HttpOnly + Secure + SameSite=Strict Cookie**로 전달한다.
+- `signup`, `login`, `refresh` 성공 시 서버는 Refresh Token과 별도로 non-HttpOnly `csrfToken` Cookie를 함께 설정하고, `refresh` 시 두 쿠키를 함께 회전한다.
 - `/api/v1/auth/refresh`와 `/api/v1/auth/logout`는 refresh cookie 외에 `X-CSRF-Token` 헤더를 함께 검증하는 double-submit 패턴을 적용한다.
 - refresh token은 안전 저장 및 rotation 적용
 - 서버는 `Helmet` 등 보안 헤더 미들웨어로 CSP, `X-Content-Type-Options`, `Referrer-Policy`를 적용한다.
@@ -622,6 +628,7 @@ Auth와 Sync, Metrics는 임계값을 분리한다.
 - Auth: brute force 방지를 위해 더 낮은 한도 사용
 - Sync: 사용자 경험을 해치지 않는 범위에서 더 높은 한도 사용
 - Metrics: 익명 남용을 막되 정상 이벤트 업로드를 과도하게 차단하지 않는 중간 한도 사용
+- Auth rate limit 초과 응답 코드는 `AUTH_429_RATE_LIMIT`, Sync/Metrics rate limit 초과 응답 코드는 `SYNC_429_RATE_LIMIT`를 사용한다.
 
 ### 12.5 로깅/모니터링
 
