@@ -12,9 +12,9 @@ export function DashboardPage() {
   return (
     <div className="space-y-6">
       <PageSection
-        eyebrow="SCR-01 ~ SCR-03"
-        title="대시보드 앱 셸 골격"
-        description="히어로, 할 일 목록, 통계 영역만 우선 배치한 placeholder 화면입니다. 실제 Task CRUD와 선택 상태는 후속 구현에서 연결합니다."
+        eyebrow="Today"
+        title="오늘의 흐름을 한눈에 확인하세요"
+        description="핵심 과제를 정리하고, 지금 바로 집중을 시작할 수 있는 공간입니다."
       >
         <div className="grid gap-3 sm:grid-cols-3">
           {dashboardFilters.map((filter, index) => (
@@ -31,9 +31,9 @@ export function DashboardPage() {
       </PageSection>
 
       <PageSection
-        eyebrow="Summary"
-        title="오늘의 요약 카드"
-        description="DailySummary, Reward Snapshot, 핵심 과제 요약이 들어갈 자리를 먼저 고정합니다."
+        eyebrow="Overview"
+        title="오늘의 요약"
+        description="집중 시간, 완료한 세션, 보상 현황을 빠르게 확인할 수 있어요."
       >
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {dashboardSummaryCards.map((card) => (
@@ -49,13 +49,13 @@ export function DashboardPage() {
       </PageSection>
 
       <PageSection
-        eyebrow="Empty / CRUD"
-        title="과제 없음 상태 placeholder"
-        description="문서 기준으로 empty, disabled, CTA 우선순위를 먼저 반영합니다."
+        eyebrow="Tasks"
+        title="할 일을 추가해 보세요"
+        description="과제를 등록하면 집중 시작과 핵심 과제 지정이 더 쉬워집니다."
       >
         <EmptyState
-          title="오늘 할 일이 아직 없습니다"
-          description="첫 과제를 만들면 핵심 과제 지정과 집중 시작 흐름이 활성화됩니다."
+          title="아직 등록한 과제가 없어요"
+          description="가장 먼저 끝내고 싶은 일을 하나 추가해 보세요. 오늘의 집중이 훨씬 선명해집니다."
           actionLabel={<button type="button" className="button-primary">첫 과제 추가</button>}
         />
       </PageSection>

@@ -71,6 +71,7 @@ model UserSetting {
 }
 
 model RefreshToken {
+  /// SQL migrations manage the active-expiry and auth lookup indexes for revoked-token filtering.
   id         String    @id @default(uuid()) @db.Uuid
   userId     String    @db.Uuid
   tokenHash  String    @db.VarChar(255)
@@ -85,6 +86,7 @@ model RefreshToken {
 }
 
 model Task {
+  /// Filtered indexes and CHECK constraints for soft delete / core-task rules live in SQL migrations.
   id                String         @id @default(uuid()) @db.Uuid
   userId            String         @db.Uuid
   clientGeneratedId String?        @unique(map: "uq_task_client_generated_id") @db.Uuid
@@ -103,6 +105,7 @@ model Task {
 }
 
 model FocusSession {
+  /// Active-session uniqueness and pause-count validation live in SQL migrations.
   id                  String               @id @default(uuid()) @db.Uuid
   userId              String               @db.Uuid
   taskId              String               @db.Uuid
@@ -130,6 +133,7 @@ model FocusSession {
 }
 
 model RewardLedger {
+  /// Positive reward value validation lives in SQL migrations.
   id                  String               @id @default(uuid()) @db.Uuid
   userId              String               @db.Uuid
   sourceSessionId     String               @unique @db.Uuid
@@ -155,6 +159,7 @@ model UserProgressSnapshot {
 }
 
 model DailyFocusStat {
+  /// Non-negative aggregate validation lives in SQL migrations.
   id                String   @id @default(uuid()) @db.Uuid
   userId            String   @db.Uuid
   statDate          DateTime @db.Date
@@ -170,6 +175,7 @@ model DailyFocusStat {
 }
 
 model ProductMetricEvent {
+  /// Partial dedupe uniqueness is enforced in SQL migrations for non-null dedupe keys only.
   eventId         String          @id @db.Uuid
   userId          String?         @db.Uuid
   focusSessionId  String?         @db.Uuid

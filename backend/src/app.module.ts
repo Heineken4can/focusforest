@@ -7,13 +7,13 @@ import {
 import { ConfigModule } from '@nestjs/config';
 import configuration from './common/config/configuration';
 import { validateEnv } from './common/config/env.validation';
-import { HttpExceptionFilter } from './common/http/http-exception.filter';
 import { AppLoggerService } from './common/logger/app-logger.service';
 import { HttpLoggingMiddleware } from './common/logger/http-logging.middleware';
 import { RequestContextMiddleware } from './common/logger/request-context.middleware';
 import { RequestContextService } from './common/logger/request-context.service';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { RedisModule } from './common/redis/redis.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { HealthModule } from './modules/health/health.module';
 
 @Module({
@@ -27,6 +27,7 @@ import { HealthModule } from './modules/health/health.module';
     }),
     PrismaModule,
     RedisModule,
+    AuthModule,
     HealthModule,
   ],
   providers: [
@@ -34,7 +35,6 @@ import { HealthModule } from './modules/health/health.module';
     RequestContextMiddleware,
     HttpLoggingMiddleware,
     AppLoggerService,
-    HttpExceptionFilter,
   ],
 })
 export class AppModule implements NestModule {

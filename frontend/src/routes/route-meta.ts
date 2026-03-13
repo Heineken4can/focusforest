@@ -6,36 +6,38 @@ export type RouteMeta = {
   description: string;
   navLabel: string;
   shortLabel: string;
+  showInNavigation?: boolean;
   immersive?: boolean;
 };
 
 export const routeMetaList: RouteMeta[] = [
   {
     path: ROUTES.dashboard,
-    title: 'Dashboard',
-    description: '오늘의 과제와 통계를 정리하는 준비 화면',
+    title: '대시보드',
+    description: '오늘의 과제와 집중 기록을 확인하세요.',
     navLabel: '대시보드',
     shortLabel: 'DB',
   },
   {
     path: ROUTES.focus,
-    title: 'Focus',
-    description: '타이머와 세션 제어만 남긴 몰입 모드',
+    title: '집중',
+    description: '지금 가장 중요한 한 가지에 몰입하는 시간입니다.',
     navLabel: '집중',
     shortLabel: 'FC',
     immersive: true,
   },
   {
     path: ROUTES.auth,
-    title: 'Auth',
-    description: '로그인, 회원가입, 로컬 모드 진입',
+    title: '계정 연결',
+    description: '로그인하거나 회원가입하고 기록을 이어가세요.',
     navLabel: '인증',
     shortLabel: 'AU',
+    showInNavigation: false,
   },
   {
     path: ROUTES.settings,
-    title: 'Settings',
-    description: '테마, 타임존, 동기화 설정',
+    title: '설정',
+    description: '테마와 계정 상태를 확인하고 관리하세요.',
     navLabel: '설정',
     shortLabel: 'ST',
   },
@@ -47,8 +49,8 @@ export function getRouteMeta(pathname: string): RouteMeta {
       (route) => pathname === route.path || pathname.startsWith(`${route.path}/`),
     ) ?? {
       path: pathname,
-      title: 'Page',
-      description: '정의되지 않은 경로',
+      title: '페이지',
+      description: '요청한 화면을 찾을 수 없습니다.',
       navLabel: '페이지',
       shortLabel: 'PG',
     }

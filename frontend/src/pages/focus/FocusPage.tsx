@@ -1,7 +1,5 @@
 import { AccessibleIconButton } from '@/components/AccessibleIconButton';
 import { PageSection } from '@/components/layout/PageSection';
-import { ErrorState } from '@/components/states/ErrorState';
-import { LoadingState } from '@/components/states/LoadingState';
 import {
   focusControls,
   focusStatuses,
@@ -19,22 +17,22 @@ export function FocusPage() {
         className="surface-panel space-y-6 text-center"
       >
         <div className="flex items-center justify-between gap-3">
-          <span className="status-badge border-toss-blue/40 text-toss-blue">RUNNING</span>
+          <span className="status-badge border-toss-blue/40 text-toss-blue">집중 중</span>
           <AccessibleIconButton
-            ariaLabel="집중 세션 정보 placeholder"
-            title="세션 정보 placeholder"
+            ariaLabel="집중 세션 안내"
+            title="집중 세션 안내"
           >
             i
           </AccessibleIconButton>
         </div>
 
         <div>
-          <p className="text-sm text-toss-textSub">Current Task</p>
+          <p className="text-sm text-toss-textSub">현재 과제</p>
           <h2 id="focus-timer-title" className="mt-2 text-2xl font-bold">
-            핵심 과제 placeholder
+            가장 중요한 한 가지에 집중해 보세요
           </h2>
           <p className="mt-2 text-sm text-toss-textSub">
-            타이머 계산, pause 정책, give-up 모달은 후속 로직 단계에서 연결됩니다.
+            타이머가 흐르는 동안 지금 할 일 하나에만 몰입해 보세요.
           </p>
         </div>
 
@@ -46,7 +44,7 @@ export function FocusPage() {
         </div>
 
         <p className="sr-only" aria-live="polite">
-          현재 집중 세션 placeholder. 남은 시간 25분 0초, 상태 RUNNING.
+          현재 집중 세션이 진행 중입니다. 남은 시간은 25분입니다.
         </p>
 
         <div className="grid gap-3 sm:grid-cols-2">
@@ -63,9 +61,9 @@ export function FocusPage() {
       </section>
 
       <PageSection
-        eyebrow="Session States"
-        title="집중 상태 매핑"
-        description="RUNNING, PAUSED, BREAK, COMPLETED 상태를 공통 badge로 먼저 고정합니다."
+        eyebrow="Flow"
+        title="집중 흐름"
+        description="세션이 어떻게 이어지는지 미리 확인하고 리듬을 유지해 보세요."
       >
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {focusStatuses.map((status) => (
@@ -80,22 +78,10 @@ export function FocusPage() {
         </div>
       </PageSection>
 
-      <div className="grid gap-4 xl:grid-cols-2">
-        <LoadingState
-          title="세션 복원 로딩"
-          description="bootstrap 후 activeSession snapshot을 붙일 자리를 위한 공통 skeleton입니다."
-        />
-        <ErrorState
-          title="Pause 제한 초과"
-          description="SESSION_409_PAUSE_LIMIT 또는 SESSION_409_TIMEOUT fallback 영역입니다."
-          actionLabel="대시보드로 이동"
-        />
-      </div>
-
       <PageSection
-        eyebrow="Desktop Aside"
-        title="읽기 전용 보조 영역"
-        description="집중 모드 데스크톱 우측 패널은 조회 전용으로 유지합니다."
+        eyebrow="Guide"
+        title="집중을 이어가기 위한 안내"
+        description="다음 작업과 오늘의 흐름을 보며 세션 사이의 전환을 더 부드럽게 만들 수 있어요."
       >
         <div className="grid gap-4 lg:grid-cols-3">
           {readOnlySidebarCards.map((card) => (

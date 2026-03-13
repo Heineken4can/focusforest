@@ -14,7 +14,7 @@ async function bootstrap(): Promise<void> {
   const configService = app.get(ConfigService);
   const port = configService.get<number>('app.port') ?? 3000;
 
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
 
   Logger.log(`Focus Forest backend listening on port ${port}`, 'Bootstrap');
 }
@@ -29,3 +29,4 @@ bootstrap().catch((error: unknown) => {
   );
   process.exit(1);
 });
+

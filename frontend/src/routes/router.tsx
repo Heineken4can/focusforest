@@ -8,6 +8,7 @@ import { DashboardPage } from '@/pages/dashboard/DashboardPage';
 import { FocusPage } from '@/pages/focus/FocusPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { SettingsPage } from '@/pages/settings/SettingsPage';
+import { ProtectedRoute } from '@/routes/ProtectedRoute';
 
 export const router = createBrowserRouter([
   {
@@ -15,7 +16,11 @@ export const router = createBrowserRouter([
     element: <Navigate replace to={ROUTES.dashboard} />,
   },
   {
-    element: <AppShell />,
+    element: (
+      <ProtectedRoute>
+        <AppShell />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: ROUTES.dashboard,

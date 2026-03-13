@@ -1,14 +1,16 @@
-import { Controller, Get, ServiceUnavailableException } from '@nestjs/common';
+﻿import { Controller, Get, ServiceUnavailableException } from '@nestjs/common';
 import {
   ApiOkResponse,
   ApiOperation,
   ApiServiceUnavailableResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Public } from '../../common/auth/public.decorator';
 import { createSuccessResponse } from '../../common/http/api-response';
 import { HealthService } from './health.service';
 
 @ApiTags('Health')
+@Public()
 @Controller('health')
 export class HealthController {
   constructor(private readonly healthService: HealthService) {}

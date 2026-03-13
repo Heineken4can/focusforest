@@ -2,7 +2,7 @@ export type ApiSuccessResponse<T> = {
   status: 'success';
   message: string;
   data: T;
-  meta: Record<string, never>;
+  meta: Record<string, unknown>;
 };
 
 export const createSuccessResponse = <T>(

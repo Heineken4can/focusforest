@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils/cn';
 import { routeMetaList } from '@/routes/route-meta';
 
-const shellRoutes = routeMetaList.filter((route) => route.path !== '/auth' && !route.immersive);
+const shellRoutes = routeMetaList.filter((route) => route.showInNavigation !== false);
 
 export function AppSidebar() {
   return (

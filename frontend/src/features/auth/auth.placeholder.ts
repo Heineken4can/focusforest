@@ -3,13 +3,15 @@ export const authTabs = [
   { value: 'signup', label: '회원가입' },
 ] as const;
 
-export const authBootstrapStates = {
+export const authSubmissionStates = {
   loading: {
-    title: 'bootstrap 동기화 준비',
-    description: '로그인 성공 직후 render-ready snapshot을 가져오는 차단형 overlay 영역입니다.',
+    title: '잠시만요',
+    description: '입력한 정보를 확인하고 있어요.',
   },
-  conflict: {
-    title: 'bootstrap 충돌 안내',
-    description: 'serverSnapshot 기준으로 최신 상태 반영 CTA를 배치할 자리를 미리 확보합니다.',
+  success: {
+    loginTitle: '로그인이 완료됐어요',
+    signupTitle: '회원가입이 완료됐어요',
+    description: '이제 바로 Focus Forest를 시작할 수 있어요.',
+    bootstrapDescription: '계정 준비가 끝나면 바로 Focus Forest를 시작할 수 있어요.',
   },
 } as const;

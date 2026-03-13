@@ -4,7 +4,10 @@ import type { Response as SupertestResponse } from 'supertest';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import request = require('supertest');
 import { configureApp } from '../src/bootstrap';
-import { HealthService } from '../src/modules/health/health.service';
+import {
+  HealthService,
+  ReadinessStatus,
+} from '../src/modules/health/health.service';
 
 const applyTestEnv = (): void => {
   process.env.NODE_ENV = 'test';
@@ -32,8 +35,31 @@ const applyTestEnv = (): void => {
   process.env.SENTRY_DSN = '';
 };
 
+const createReadinessStatus = (ok: boolean): ReadinessStatus => ({
+  ok,
+  timestamp: '2026-03-12T00:00:00.000Z',
+  version: '0.1.0-test',
+  checks: {
+    configuration: { ok: true },
+    database: ok
+      ? { ok: true, latencyMs: 1 }
+      : { ok: false, latencyMs: 1, error: 'database unavailable' },
+    redis: ok
+      ? { ok: true, latencyMs: 1 }
+      : { ok: false, latencyMs: 1, error: 'redis unavailable' },
+  },
+});
+
 describe('HealthController (e2e)', () => {
   let app: INestApplication;
+  const healthServiceMock = {
+    getLiveStatus: jest.fn(() => ({
+      ok: true,
+      timestamp: '2026-03-12T00:00:00.000Z',
+      version: '0.1.0-test',
+    })),
+    getReadinessStatus: jest.fn<Promise<ReadinessStatus>, []>(),
+  };
 
   beforeAll(async () => {
     applyTestEnv();
@@ -43,28 +69,17 @@ describe('HealthController (e2e)', () => {
       imports: [AppModule],
     })
       .overrideProvider(HealthService)
-      .useValue({
-        getLiveStatus: () => ({
-          ok: true,
-          timestamp: '2026-03-12T00:00:00.000Z',
-          version: '0.1.0-test',
-        }),
-        getReadinessStatus: () => ({
-          ok: true,
-          timestamp: '2026-03-12T00:00:00.000Z',
-          version: '0.1.0-test',
-          checks: {
-            configuration: { ok: true },
-            database: { ok: true, latencyMs: 1 },
-            redis: { ok: true, latencyMs: 1 },
-          },
-        }),
-      })
+      .useValue(healthServiceMock)
       .compile();
 
     app = moduleFixture.createNestApplication();
     configureApp(app);
     await app.init();
+  });
+
+  beforeEach(() => {
+    healthServiceMock.getLiveStatus.mockClear();
+    healthServiceMock.getReadinessStatus.mockReset();
   });
 
   afterAll(async () => {
@@ -92,9 +107,68 @@ describe('HealthController (e2e)', () => {
       });
   });
 
+  it('/health/live (GET) allows local network frontend origins during development', async () => {
+    const server = app.getHttpServer() as Parameters<typeof request>[0];
+    const localNetworkOrigin = 'http://192.168.88.78:5173';
+
+    await request(server)
+      .get('/health/live')
+      .set('Origin', localNetworkOrigin)
+      .expect(200)
+      .expect('access-control-allow-origin', localNetworkOrigin);
+  });
+
+  it('/health/ready (GET) returns 200 when dependencies are ready', async () => {
+    const server = app.getHttpServer() as Parameters<typeof request>[0];
+    healthServiceMock.getReadinessStatus.mockResolvedValue(
+      createReadinessStatus(true),
+    );
+
+    await request(server)
+      .get('/health/ready')
+      .expect(200)
+      .expect((response: SupertestResponse) => {
+        const body = response.body as {
+          status: string;
+          data: {
+            ok: boolean;
+          };
+        };
+
+        expect(body.status).toBe('success');
+        expect(body.data.ok).toBe(true);
+      });
+  });
+
+  it('/health/ready (GET) returns 503 when dependencies are unavailable', async () => {
+    const server = app.getHttpServer() as Parameters<typeof request>[0];
+    healthServiceMock.getReadinessStatus.mockResolvedValue(
+      createReadinessStatus(false),
+    );
+
+    await request(server)
+      .get('/health/ready')
+      .expect(503)
+      .expect((response: SupertestResponse) => {
+        const body = response.body as {
+          status: string;
+          message: string;
+          code: string;
+          data: {
+            ok: boolean;
+          };
+        };
+
+        expect(body.status).toBe('error');
+        expect(body.code).toBe('APP_503_NOT_READY');
+        expect(body.data.ok).toBe(false);
+      });
+  });
+
   it('/api-docs/ (GET)', async () => {
     const server = app.getHttpServer() as Parameters<typeof request>[0];
 
     await request(server).get('/api-docs/').expect(200);
   });
 });
+

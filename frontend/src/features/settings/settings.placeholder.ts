@@ -8,19 +8,19 @@ export const themeOptions: Array<{ value: ThemeMode; label: string }> = [
 
 export const settingsSections = [
   {
-    title: '타임존 설정',
-    description: '변경 이후 완료 세션부터 새 timezone 기준을 적용하는 영역',
+    title: '타임존',
+    description: '현재 위치와 생활 리듬에 맞는 시간 기준을 설정할 수 있습니다.',
   },
   {
     title: '자동 동기화',
-    description: '로컬-서버 동기화 정책과 retry 표시를 둘 설정 그룹',
+    description: '기록이 여러 기기에서 자연스럽게 이어지도록 준비합니다.',
   },
   {
     title: '수동 동기화',
-    description: 'SyncState.lastSyncAt, retryable, hasConflict 연결 영역',
+    description: '원할 때 직접 최신 상태를 확인하고 정리할 수 있습니다.',
   },
   {
     title: '로그아웃',
-    description: 'auth/logout + CSRF double-submit 흐름의 진입 버튼 영역',
+    description: '현재 계정 연결을 해제하고 로그인 화면으로 돌아갑니다.',
   },
 ] as const;

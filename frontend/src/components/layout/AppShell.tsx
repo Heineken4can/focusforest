@@ -36,9 +36,9 @@ export function AppShell() {
 
               <div className="flex items-center gap-2">
                 <AccessibleIconButton
-                  ariaLabel="알림 영역 placeholder"
+                  ariaLabel="알림"
                   disabled
-                  title="알림 영역 placeholder"
+                  title="알림"
                   className="disabled:pointer-events-none disabled:cursor-not-allowed disabled:text-toss-textSub"
                 >
                   NL
@@ -70,12 +70,12 @@ export function AppShell() {
                 aria-label="집중 보조 요약"
               >
                 <div className="surface-panel sticky top-28 space-y-4">
-                  <p className="text-sm text-toss-textSub">Read only summary</p>
+                  <p className="text-sm text-toss-textSub">오늘 요약</p>
                   <h2 className="text-lg font-semibold text-toss-textMain">
-                    다음 작업 후보 / 오늘 요약
+                    다음 작업과 진행 흐름
                   </h2>
                   <p className="text-sm text-toss-textSub">
-                    집중 모드에서는 이 패널이 조회 전용으로 유지됩니다.
+                    집중 중에는 현재 흐름을 해치지 않도록 필요한 정보만 간단하게 보여줍니다.
                   </p>
                 </div>
               </aside>

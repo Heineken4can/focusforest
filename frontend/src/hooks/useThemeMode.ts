@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 
 import {
   applyThemeMode,
-  readStoredThemeMode,
   resolveThemeMode,
   type ResolvedTheme,
   type ThemeMode,
 } from '@/lib/theme/theme';
+import { appStore } from '@/stores/app-store';
 
 type UseThemeModeResult = {
   themeMode: ThemeMode;
@@ -15,7 +15,11 @@ type UseThemeModeResult = {
 };
 
 export function useThemeMode(): UseThemeModeResult {
-  const [themeMode, setThemeModeState] = useState<ThemeMode>(() => readStoredThemeMode());
+  const themeMode = useSyncExternalStore(
+    appStore.subscribe,
+    () => appStore.getSnapshot().themeMode,
+    () => appStore.getSnapshot().themeMode,
+  );
   const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() =>
     resolveThemeMode(themeMode),
   );
@@ -40,6 +44,8 @@ export function useThemeMode(): UseThemeModeResult {
   return {
     themeMode,
     resolvedTheme,
-    setThemeMode: setThemeModeState,
+    setThemeMode: (nextMode: ThemeMode) => {
+      appStore.setSnapshot({ themeMode: nextMode });
+    },
   };
 }

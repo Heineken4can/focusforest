@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils/cn';
 import { routeMetaList } from '@/routes/route-meta';
 
-const mobileRoutes = routeMetaList.filter((route) => route.path !== '/auth' && !route.immersive);
+const mobileRoutes = routeMetaList.filter((route) => route.showInNavigation !== false);
 
 export function BottomNav() {
   return (

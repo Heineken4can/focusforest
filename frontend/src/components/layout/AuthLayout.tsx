@@ -15,11 +15,11 @@ export function AuthLayout() {
             <p className="text-xs font-semibold uppercase tracking-[0.12em] text-toss-textSub">
               Focus Forest
             </p>
-            <h1 className="mt-1 text-2xl font-bold">Auth</h1>
+            <h1 className="mt-1 text-2xl font-bold">계정 연결</h1>
           </div>
 
           <Link to={ROUTES.dashboard} className="button-secondary">
-            대시보드 미리보기
+            먼저 둘러보기
           </Link>
         </div>
       </header>
@@ -33,13 +33,13 @@ export function AuthLayout() {
           <aside className="hidden lg:block">
             <div className="surface-panel space-y-4">
               <span className="status-badge border-toss-green/30 text-toss-green">
-                LOCAL-FIRST
+                언제든 시작 가능
               </span>
               <h2 className="text-2xl font-bold text-toss-textMain">
-                계정 연결 전에도 핵심 집중 루프를 유지합니다.
+                계정을 연결하면 집중 기록을 더 오래 안전하게 이어갈 수 있어요.
               </h2>
               <p className="text-sm text-toss-textSub">
-                이 레이아웃은 로그인, 회원가입, bootstrap 동기화 overlay의 진입점을 위한 최소 골격입니다.
+                지금 로그인하거나, 먼저 둘러본 뒤 필요할 때 다시 계정을 연결해도 됩니다.
               </p>
             </div>
           </aside>
