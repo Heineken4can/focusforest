@@ -29,4 +29,3 @@ bootstrap().catch((error: unknown) => {
   );
   process.exit(1);
 });
-

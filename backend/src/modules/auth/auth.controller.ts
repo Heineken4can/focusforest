@@ -3,6 +3,7 @@ import {
   Controller,
   Headers,
   HttpCode,
+  HttpException,
   HttpStatus,
   Post,
   Req,
@@ -175,15 +176,46 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const cookies = this.parseCookies(request);
-    const result = await this.authService.logout({
-      userId: request.auth?.userId,
-      refreshToken: cookies.refreshToken,
-      csrfToken: cookies.csrfToken,
-      csrfHeader,
-    });
 
-    this.clearAuthCookies(response);
-    return createSuccessResponse('User logged out successfully.', result);
+    try {
+      const result = await this.authService.logout({
+        userId: request.auth?.userId,
+        refreshToken: cookies.refreshToken,
+        csrfToken: cookies.csrfToken,
+        csrfHeader,
+      });
+
+      this.clearAuthCookies(response);
+      return createSuccessResponse('User logged out successfully.', result);
+    } catch (error) {
+      if (this.shouldClearAuthCookiesOnLogoutError(error)) {
+        this.clearAuthCookies(response);
+      }
+
+      throw error;
+    }
+  }
+
+  private shouldClearAuthCookiesOnLogoutError(error: unknown): boolean {
+    if (!(error instanceof HttpException)) {
+      return false;
+    }
+
+    if (error.getStatus() !== 401) {
+      return false;
+    }
+
+    const response = error.getResponse();
+
+    if (
+      typeof response !== 'object' ||
+      response === null ||
+      !('code' in response)
+    ) {
+      return false;
+    }
+
+    return response.code === 'AUTH_401_REFRESH_REVOKED';
   }
 
   private setAuthCookies(
@@ -199,14 +231,14 @@ export class AuthController {
       httpOnly: true,
       secure: isSecureCookie,
       sameSite: 'strict',
-      path: '/api/v1/auth',
+      path: '/',
       maxAge: maxAgeMs,
     });
     response.cookie('csrfToken', csrfToken, {
       httpOnly: false,
       secure: isSecureCookie,
       sameSite: 'strict',
-      path: '/api/v1/auth',
+      path: '/',
       maxAge: maxAgeMs,
     });
   }
@@ -220,14 +252,14 @@ export class AuthController {
       httpOnly: true,
       secure: isSecureCookie,
       sameSite: 'strict',
-      path: '/api/v1/auth',
+      path: '/',
       expires: expiredAt,
     });
     response.cookie('csrfToken', '', {
       httpOnly: false,
       secure: isSecureCookie,
       sameSite: 'strict',
-      path: '/api/v1/auth',
+      path: '/',
       expires: expiredAt,
     });
   }

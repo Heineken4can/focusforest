@@ -366,6 +366,12 @@ describe('AuthController (e2e)', () => {
 
         expect(body.status).toBe('error');
         expect(body.code).toBe('AUTH_401_REFRESH_REVOKED');
+        expect(response.headers['set-cookie']).toEqual(
+          expect.arrayContaining([
+            expect.stringContaining('refreshToken=;'),
+            expect.stringContaining('csrfToken=;'),
+          ]),
+        );
       });
   });
 

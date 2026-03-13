@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { AccessibleIconButton } from '@/components/AccessibleIconButton';
@@ -45,6 +45,7 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD_LENGTH = 8;
 const MAX_PASSWORD_LENGTH = 72;
 const MAX_DISPLAY_NAME_LENGTH = 24;
+const BOOTSTRAP_REDIRECT_DELAY_MS = 700;
 
 function validateAuthForm(view: AuthView, formState: AuthFormState): AuthFormErrors {
   const nextErrors: AuthFormErrors = {};
@@ -96,7 +97,7 @@ function hasBootstrapRequired(
   return 'bootstrapRequired' in response;
 }
 
-function getInitialPageAlert(
+function getPageAlert(
   searchParams: URLSearchParams,
   locationState: AuthLocationState | null,
 ): PageAlert | null {
@@ -115,6 +116,8 @@ export function AuthPage() {
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const locationState = (location.state ?? null) as AuthLocationState | null;
+  const dialogRef = useRef<HTMLElement | null>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
   const [view, setView] = useState<AuthView>('login');
   const [showPassword, setShowPassword] = useState(false);
   const [formState, setFormState] = useState<AuthFormState>({
@@ -123,31 +126,55 @@ export function AuthPage() {
     password: '',
   });
   const [formErrors, setFormErrors] = useState<AuthFormErrors>({});
-  const [pageAlert, setPageAlert] = useState<PageAlert | null>(() =>
-    getInitialPageAlert(searchParams, locationState),
-  );
   const [inlineAuthAlert, setInlineAuthAlert] = useState<InlineAuthAlert | null>(null);
   const [submitFeedback, setSubmitFeedback] = useState<SubmitFeedback>({ kind: 'idle' });
 
   useDocumentTitle('회원가입 및 로그인');
 
+  const pageAlert = getPageAlert(searchParams, locationState);
+  const isBootstrapLoading = submitFeedback.kind === 'bootstrap-loading';
+
   useEffect(() => {
-    if (submitFeedback.kind !== 'bootstrap-loading') {
+    if (!isBootstrapLoading) {
       return;
     }
 
     const timer = window.setTimeout(() => {
       appStore.setSnapshot({ bootstrapStatus: 'completed' });
       navigate(ROUTES.dashboard, { replace: true });
-    }, 700);
+    }, BOOTSTRAP_REDIRECT_DELAY_MS);
 
     return () => window.clearTimeout(timer);
-  }, [navigate, submitFeedback]);
+  }, [isBootstrapLoading, navigate]);
+
+  useEffect(() => {
+    if (!isBootstrapLoading) {
+      return;
+    }
+
+    previousFocusRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    dialogRef.current?.focus();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Tab') {
+        event.preventDefault();
+        dialogRef.current?.focus();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown, true);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown, true);
+      previousFocusRef.current?.focus();
+      previousFocusRef.current = null;
+    };
+  }, [isBootstrapLoading]);
 
   function handleTabChange(nextView: AuthView) {
     setView(nextView);
     setFormErrors({});
-    setPageAlert(null);
     setInlineAuthAlert(null);
     setSubmitFeedback({ kind: 'idle' });
   }
@@ -161,7 +188,6 @@ export function AuthPage() {
       ...currentErrors,
       [field]: undefined,
     }));
-    setPageAlert(null);
     setInlineAuthAlert(null);
     if (submitFeedback.kind !== 'idle') {
       setSubmitFeedback({ kind: 'idle' });
@@ -181,7 +207,6 @@ export function AuthPage() {
     }
 
     setFormErrors({});
-    setPageAlert(null);
     setInlineAuthAlert(null);
     setSubmitFeedback({ kind: 'submitting', view });
 
@@ -234,7 +259,11 @@ export function AuthPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-6">
-      <section className="surface-panel space-y-6" aria-labelledby="auth-title">
+      <section
+        className="surface-panel space-y-6"
+        aria-labelledby="auth-title"
+        aria-hidden={isBootstrapLoading}
+      >
         <div>
           <h2 id="auth-title" className="text-2xl font-bold">
             로그인하고 숲을 이어가세요
@@ -403,7 +432,7 @@ export function AuthPage() {
         </form>
       </section>
 
-      {submitFeedback.kind === 'bootstrap-loading' ? (
+      {isBootstrapLoading ? (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-toss-overlay/70 px-4"
           role="dialog"
@@ -411,7 +440,13 @@ export function AuthPage() {
           aria-labelledby="bootstrap-loading-title"
           aria-describedby="bootstrap-loading-description"
         >
-          <section className="surface-panel w-full max-w-md" aria-busy="true" aria-live="polite">
+          <section
+            ref={dialogRef}
+            tabIndex={-1}
+            className="surface-panel w-full max-w-md outline-none"
+            aria-busy="true"
+            aria-live="polite"
+          >
             <h3 id="bootstrap-loading-title" className="text-xl font-semibold text-toss-textMain">
               기록을 불러오고 있어요
             </h3>

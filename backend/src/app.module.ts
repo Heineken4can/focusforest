@@ -14,7 +14,10 @@ import { RequestContextService } from './common/logger/request-context.service';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { RedisModule } from './common/redis/redis.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { FocusSessionModule } from './modules/focus-sessions/focus-session.module';
 import { HealthModule } from './modules/health/health.module';
+import { RewardModule } from './modules/rewards/reward.module';
+import { TaskModule } from './modules/tasks/task.module';
 
 @Module({
   imports: [
@@ -28,6 +31,9 @@ import { HealthModule } from './modules/health/health.module';
     PrismaModule,
     RedisModule,
     AuthModule,
+    TaskModule,
+    RewardModule,
+    FocusSessionModule,
     HealthModule,
   ],
   providers: [

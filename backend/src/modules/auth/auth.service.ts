@@ -54,17 +54,11 @@ export class AuthService {
     const existingUser = await this.authRepository.findByEmail(email);
 
     if (existingUser) {
-      throw new ConflictException({
-        message: 'Email is already registered.',
-        code: 'AUTH_409_EMAIL_ALREADY_EXISTS',
-        data: {
-          field: 'email',
-        },
-      });
+      throw this.emailAlreadyExists();
     }
 
     const passwordHash = await this.authPasswordService.hash(dto.password);
-    const user = await this.authRepository.createUser({
+    const user = await this.createUserOrThrow({
       email,
       passwordHash,
       displayName: dto.displayName.trim(),
@@ -102,6 +96,10 @@ export class AuthService {
     const user = await this.authRepository.findByEmail(email);
 
     if (!user) {
+      await this.authPasswordService.verify(
+        await this.authPasswordService.getDummyHash(),
+        dto.password,
+      );
       throw this.invalidCredentials();
     }
 
@@ -254,6 +252,55 @@ export class AuthService {
     }
 
     return { revoked: true };
+  }
+
+  private async createUserOrThrow(input: {
+    email: string;
+    passwordHash: string;
+    displayName: string;
+    timezone: string;
+  }) {
+    try {
+      return await this.authRepository.createUser(input);
+    } catch (error) {
+      if (this.isEmailAlreadyExistsError(error)) {
+        throw this.emailAlreadyExists();
+      }
+
+      throw error;
+    }
+  }
+
+  private isEmailAlreadyExistsError(error: unknown): boolean {
+    if (typeof error !== 'object' || error === null || !('code' in error)) {
+      return false;
+    }
+
+    if (error.code !== 'P2002') {
+      return false;
+    }
+
+    const meta = 'meta' in error ? error.meta : undefined;
+    const target =
+      typeof meta === 'object' && meta !== null && 'target' in meta
+        ? meta.target
+        : undefined;
+
+    if (Array.isArray(target)) {
+      return target.includes('email');
+    }
+
+    return typeof target === 'string' && target.includes('email');
+  }
+
+  private emailAlreadyExists(): ConflictException {
+    return new ConflictException({
+      message: 'Email is already registered.',
+      code: 'AUTH_409_EMAIL_ALREADY_EXISTS',
+      data: {
+        field: 'email',
+      },
+    });
   }
 
   private invalidCredentials(): UnauthorizedException {

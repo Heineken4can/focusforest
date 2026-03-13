@@ -4,6 +4,8 @@ import * as argon2 from 'argon2';
 
 @Injectable()
 export class AuthPasswordService {
+  private dummyHashPromise?: Promise<string>;
+
   constructor(private readonly configService: ConfigService) {}
 
   async hash(password: string): Promise<string> {
@@ -19,5 +21,13 @@ export class AuthPasswordService {
 
   async verify(hash: string, plainText: string): Promise<boolean> {
     return argon2.verify(hash, plainText);
+  }
+
+  async getDummyHash(): Promise<string> {
+    this.dummyHashPromise ??= this.hash(
+      'focus-forest-auth-dummy-password-placeholder',
+    );
+
+    return this.dummyHashPromise;
   }
 }

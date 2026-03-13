@@ -17,6 +17,7 @@ const authRepositoryMock = {
 const authPasswordServiceMock = {
   hash: jest.fn(),
   verify: jest.fn(),
+  getDummyHash: jest.fn(),
 };
 
 const authTokenServiceMock = {
@@ -46,7 +47,67 @@ describe('AuthService', () => {
     authTokenServiceMock.hashRefreshToken.mockReturnValue(
       'hashed-refresh-token',
     );
+    authPasswordServiceMock.getDummyHash.mockResolvedValue('dummy-hash');
     authRepositoryMock.rotateRefreshToken.mockResolvedValue(true);
+  });
+
+  it('maps concurrent signup email conflicts to 409', async () => {
+    authRepositoryMock.findByEmail.mockResolvedValue(null);
+    authPasswordServiceMock.hash.mockResolvedValue('hashed-password');
+    authRepositoryMock.createUser.mockRejectedValue({
+      code: 'P2002',
+      meta: {
+        target: ['email'],
+      },
+    });
+
+    const service = new AuthService(
+      authRepositoryMock as unknown as AuthRepository,
+      authPasswordServiceMock as unknown as AuthPasswordService,
+      authTokenServiceMock as unknown as AuthTokenService,
+    );
+
+    await expect(
+      service.signup({
+        email: 'user@example.com',
+        password: 'password1234',
+        displayName: 'Focus User',
+      }),
+    ).rejects.toMatchObject({
+      status: 409,
+      response: {
+        code: 'AUTH_409_EMAIL_ALREADY_EXISTS',
+      },
+    });
+  });
+
+  it('normalizes login timing when the user does not exist', async () => {
+    authRepositoryMock.findByEmail.mockResolvedValue(null);
+    authPasswordServiceMock.verify.mockResolvedValue(false);
+
+    const service = new AuthService(
+      authRepositoryMock as unknown as AuthRepository,
+      authPasswordServiceMock as unknown as AuthPasswordService,
+      authTokenServiceMock as unknown as AuthTokenService,
+    );
+
+    await expect(
+      service.login({
+        email: 'missing@example.com',
+        password: 'password1234',
+      }),
+    ).rejects.toMatchObject({
+      status: 401,
+      response: {
+        code: 'AUTH_401_UNAUTHORIZED',
+      },
+    });
+
+    expect(authPasswordServiceMock.getDummyHash).toHaveBeenCalledTimes(1);
+    expect(authPasswordServiceMock.verify).toHaveBeenCalledWith(
+      'dummy-hash',
+      'password1234',
+    );
   });
 
   it('creates a user during signup and returns tokens', async () => {

@@ -105,7 +105,7 @@ model Task {
 }
 
 model FocusSession {
-  /// Active-session uniqueness and pause-count validation live in SQL migrations.
+  /// Active-session uniqueness, pause-count, and plannedFocusSec validation live in SQL migrations.
   id                  String               @id @default(uuid()) @db.Uuid
   userId              String               @db.Uuid
   taskId              String               @db.Uuid
@@ -149,6 +149,7 @@ model RewardLedger {
 }
 
 model UserProgressSnapshot {
+  /// Non-negative and level-floor CHECK constraints live in SQL migrations.
   id                     String   @id @default(uuid()) @db.Uuid
   userId                 String   @unique @db.Uuid
   totalSp                Int      @default(0)
@@ -171,7 +172,6 @@ model DailyFocusStat {
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, statDate], map: "uq_daily_focus_stat_user_date")
-  @@index([userId, statDate], map: "idx_daily_focus_stat_user_date")
 }
 
 model ProductMetricEvent {

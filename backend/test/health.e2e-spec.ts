@@ -171,4 +171,3 @@ describe('HealthController (e2e)', () => {
     await request(server).get('/api-docs/').expect(200);
   });
 });
-

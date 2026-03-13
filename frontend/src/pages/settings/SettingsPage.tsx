@@ -12,6 +12,30 @@ import { ApiRequestError } from '@/lib/api/client';
 import { ROUTES } from '@/lib/constants/routes';
 import { appStore } from '@/stores/app-store';
 
+function useIsAuthenticated() {
+  return useSyncExternalStore(
+    appStore.subscribe,
+    () => appStore.getSnapshot().isAuthenticated,
+    () => appStore.getSnapshot().isAuthenticated,
+  );
+}
+
+function useConnectionState() {
+  return useSyncExternalStore(
+    appStore.subscribe,
+    () => appStore.getSnapshot().connectionState,
+    () => appStore.getSnapshot().connectionState,
+  );
+}
+
+function useCurrentUser() {
+  return useSyncExternalStore(
+    appStore.subscribe,
+    () => appStore.getSnapshot().currentUser,
+    () => appStore.getSnapshot().currentUser,
+  );
+}
+
 type LogoutFeedback =
   | { kind: 'idle' }
   | { kind: 'loading' }
@@ -49,11 +73,9 @@ function getLogoutErrorFeedback(error: unknown): Extract<LogoutFeedback, { kind:
 export function SettingsPage() {
   const { themeMode, resolvedTheme, setThemeMode } = useThemeMode();
   const navigate = useNavigate();
-  const authSnapshot = useSyncExternalStore(
-    appStore.subscribe,
-    appStore.getSnapshot,
-    appStore.getSnapshot,
-  );
+  const isAuthenticated = useIsAuthenticated();
+  const connectionState = useConnectionState();
+  const currentUser = useCurrentUser();
   const [logoutFeedback, setLogoutFeedback] = useState<LogoutFeedback>({ kind: 'idle' });
 
   useDocumentTitle('환경설정');
@@ -112,19 +134,19 @@ export function SettingsPage() {
               <div className="flex items-center justify-between gap-3">
                 <dt className="text-sm text-toss-textSub">연결 상태</dt>
                 <dd className="text-sm font-semibold text-toss-textMain">
-                  {authSnapshot.connectionState}
+                  {connectionState}
                 </dd>
               </div>
               <div className="flex items-center justify-between gap-3">
                 <dt className="text-sm text-toss-textSub">표시 이름</dt>
                 <dd className="text-sm font-semibold text-toss-textMain">
-                  {authSnapshot.currentUser?.displayName ?? '로컬 모드'}
+                  {currentUser?.displayName ?? '로컬 모드'}
                 </dd>
               </div>
               <div className="flex items-center justify-between gap-3">
                 <dt className="text-sm text-toss-textSub">이메일</dt>
                 <dd className="text-sm font-semibold text-toss-textMain">
-                  {authSnapshot.currentUser?.email ?? '연결된 계정 없음'}
+                  {currentUser?.email ?? '연결된 계정 없음'}
                 </dd>
               </div>
             </dl>
@@ -152,7 +174,7 @@ export function SettingsPage() {
         title="세션 관리"
         description="현재 계정을 안전하게 종료하고 로그인 화면으로 돌아갈 수 있습니다."
       >
-        {!authSnapshot.isAuthenticated ? (
+        {!isAuthenticated ? (
           <EmptyState
             title="현재 로그인된 계정이 없습니다"
             description="계정을 연결하면 이 영역에서 언제든 안전하게 로그아웃할 수 있습니다."
@@ -162,10 +184,10 @@ export function SettingsPage() {
             <div>
               <p className="text-sm text-toss-textSub">로그인 세션</p>
               <h3 id="logout-panel-title" className="mt-2 text-xl font-semibold text-toss-textMain">
-                {authSnapshot.currentUser?.displayName ?? '연결된 계정'}
+                {currentUser?.displayName ?? '연결된 계정'}
               </h3>
               <p className="mt-2 text-sm text-toss-textSub">
-                {authSnapshot.currentUser?.email ?? '이메일 정보 없음'}
+                {currentUser?.email ?? '이메일 정보 없음'}
               </p>
             </div>
             <button

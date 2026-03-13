@@ -1,7 +1,7 @@
 import type { AuthUser } from '@/features/auth/auth.types';
 import { readStoredThemeMode, type ThemeMode } from '@/lib/theme/theme';
 
-type ConnectionState = 'LOCAL' | 'ONLINE' | 'OFFLINE';
+type ConnectionState = 'LOCAL' | 'ONLINE';
 export type SessionStatus =
   | 'RUNNING'
   | 'PAUSED'
@@ -27,6 +27,8 @@ export type AppStoreSnapshot = {
   bootstrapStatus: BootstrapStatus;
 };
 
+const ACTIVE_SESSION_STORAGE_KEY = 'focus-forest.active-session.v1';
+
 function getInitialThemeMode(): ThemeMode {
   if (typeof window === 'undefined') {
     return 'system';
@@ -35,14 +37,89 @@ function getInitialThemeMode(): ThemeMode {
   return readStoredThemeMode();
 }
 
+function readStoredActiveSession(): Pick<AppStoreSnapshot, 'sessionStatus' | 'selectedTaskId'> {
+  if (typeof window === 'undefined') {
+    return {
+      sessionStatus: null,
+      selectedTaskId: null,
+    };
+  }
+
+  try {
+    const rawValue = window.localStorage.getItem(ACTIVE_SESSION_STORAGE_KEY);
+
+    if (!rawValue) {
+      return {
+        sessionStatus: null,
+        selectedTaskId: null,
+      };
+    }
+
+    const parsedValue = JSON.parse(rawValue) as unknown;
+
+    if (!parsedValue || typeof parsedValue !== 'object') {
+      return {
+        sessionStatus: null,
+        selectedTaskId: null,
+      };
+    }
+
+    const candidate = parsedValue as Partial<Pick<AppStoreSnapshot, 'sessionStatus' | 'selectedTaskId'>>;
+    const allowedStatuses: SessionStatus[] = [
+      'RUNNING',
+      'PAUSED',
+      'COMPLETED',
+      'BREAK_RUNNING',
+      'BREAK_SKIPPED',
+      'BREAK_COMPLETED',
+      'GIVEN_UP',
+      'GIVEN_UP_TIMEOUT',
+    ];
+
+    return {
+      sessionStatus:
+        candidate.sessionStatus && allowedStatuses.includes(candidate.sessionStatus)
+          ? candidate.sessionStatus
+          : null,
+      selectedTaskId: typeof candidate.selectedTaskId === 'string' ? candidate.selectedTaskId : null,
+    };
+  } catch {
+    return {
+      sessionStatus: null,
+      selectedTaskId: null,
+    };
+  }
+}
+
+function persistActiveSession(snapshotValue: AppStoreSnapshot) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  if (!snapshotValue.sessionStatus || !snapshotValue.selectedTaskId) {
+    window.localStorage.removeItem(ACTIVE_SESSION_STORAGE_KEY);
+    return;
+  }
+
+  window.localStorage.setItem(
+    ACTIVE_SESSION_STORAGE_KEY,
+    JSON.stringify({
+      sessionStatus: snapshotValue.sessionStatus,
+      selectedTaskId: snapshotValue.selectedTaskId,
+    }),
+  );
+}
+
 function createInitialSnapshot(): AppStoreSnapshot {
+  const activeSession = readStoredActiveSession();
+
   return {
     themeMode: getInitialThemeMode(),
     isAuthenticated: false,
     localModeFlag: false,
     connectionState: 'LOCAL',
-    sessionStatus: null,
-    selectedTaskId: null,
+    sessionStatus: activeSession.sessionStatus,
+    selectedTaskId: activeSession.selectedTaskId,
     accessToken: null,
     accessTokenExpiresAt: null,
     currentUser: null,
@@ -57,12 +134,18 @@ function notifyListeners() {
   listeners.forEach((listener) => listener());
 }
 
+function commitSnapshot(nextSnapshot: AppStoreSnapshot) {
+  snapshot = nextSnapshot;
+  persistActiveSession(snapshot);
+  notifyListeners();
+}
+
 function getClearedSessionSnapshot(params: { localModeFlag: boolean }): AppStoreSnapshot {
   return {
     ...snapshot,
     isAuthenticated: false,
     localModeFlag: params.localModeFlag,
-    connectionState: params.localModeFlag ? 'LOCAL' : 'LOCAL',
+    connectionState: 'LOCAL',
     sessionStatus: null,
     selectedTaskId: null,
     accessToken: null,
@@ -81,8 +164,7 @@ export const appStore = {
     return () => listeners.delete(listener);
   },
   setSnapshot(nextSnapshot: Partial<AppStoreSnapshot>) {
-    snapshot = { ...snapshot, ...nextSnapshot };
-    notifyListeners();
+    commitSnapshot({ ...snapshot, ...nextSnapshot });
   },
   setAuthenticatedSession(nextSession: {
     accessToken: string;
@@ -90,7 +172,7 @@ export const appStore = {
     currentUser: AuthUser;
     bootstrapRequired?: boolean;
   }) {
-    snapshot = {
+    commitSnapshot({
       ...snapshot,
       isAuthenticated: true,
       localModeFlag: false,
@@ -99,33 +181,47 @@ export const appStore = {
       accessTokenExpiresAt: nextSession.accessTokenExpiresAt,
       currentUser: nextSession.currentUser,
       bootstrapStatus: nextSession.bootstrapRequired ? 'required' : 'completed',
-    };
-    notifyListeners();
+    });
   },
   refreshAccessToken(nextToken: {
     accessToken: string;
     accessTokenExpiresAt: string;
   }) {
-    snapshot = {
+    commitSnapshot({
       ...snapshot,
       isAuthenticated: true,
       localModeFlag: false,
       connectionState: 'ONLINE',
       accessToken: nextToken.accessToken,
       accessTokenExpiresAt: nextToken.accessTokenExpiresAt,
-    };
-    notifyListeners();
+    });
+  },
+  setActiveTaskSession(nextSession: {
+    sessionStatus: SessionStatus | null;
+    selectedTaskId: string | null;
+  }) {
+    commitSnapshot({
+      ...snapshot,
+      sessionStatus: nextSession.sessionStatus,
+      selectedTaskId: nextSession.selectedTaskId,
+    });
+  },
+  hydrateActiveTaskSession() {
+    const activeSession = readStoredActiveSession();
+
+    commitSnapshot({
+      ...snapshot,
+      sessionStatus: activeSession.sessionStatus,
+      selectedTaskId: activeSession.selectedTaskId,
+    });
   },
   enterLocalMode() {
-    snapshot = getClearedSessionSnapshot({ localModeFlag: true });
-    notifyListeners();
+    commitSnapshot(getClearedSessionSnapshot({ localModeFlag: true }));
   },
   clearAuthenticatedSession() {
-    snapshot = getClearedSessionSnapshot({ localModeFlag: false });
-    notifyListeners();
+    commitSnapshot(getClearedSessionSnapshot({ localModeFlag: false }));
   },
   reset() {
-    snapshot = createInitialSnapshot();
-    notifyListeners();
+    commitSnapshot(createInitialSnapshot());
   },
 };

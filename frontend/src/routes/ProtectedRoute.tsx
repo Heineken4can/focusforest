@@ -30,6 +30,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const location = useLocation();
   const isAuthenticated = useIsAuthenticated();
   const localModeFlag = useLocalModeFlag();
+  const [didSessionExpire, setDidSessionExpire] = useState(false);
   const [isCheckingSession, setIsCheckingSession] = useState(
     !isAuthenticated && !localModeFlag,
   );
@@ -38,17 +39,22 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     let isActive = true;
 
     if (isAuthenticated || localModeFlag) {
+      setDidSessionExpire(false);
       setIsCheckingSession(false);
       return () => {
         isActive = false;
       };
     }
 
+    setDidSessionExpire(false);
     setIsCheckingSession(true);
 
     void refreshSession({ redirectOnFailure: false })
       .catch(() => {
         appStore.clearAuthenticatedSession();
+        if (isActive) {
+          setDidSessionExpire(true);
+        }
       })
       .finally(() => {
         if (isActive) {
@@ -76,5 +82,11 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     );
   }
 
-  return <Navigate replace to={ROUTES.auth} state={{ from: location.pathname }} />;
+  return (
+    <Navigate
+      replace
+      to={ROUTES.auth}
+      state={{ from: location.pathname, sessionExpired: didSessionExpire }}
+    />
+  );
 }

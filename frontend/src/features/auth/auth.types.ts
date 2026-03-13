@@ -1,4 +1,4 @@
-export type AuthUser = {
+﻿export type AuthUser = {
   id: string;
   email: string;
   displayName: string;
@@ -29,11 +29,6 @@ export type LoginResponse = {
   accessToken: string;
   accessTokenExpiresAt: string;
   bootstrapRequired: boolean;
-};
-
-export type RefreshResponse = {
-  accessToken: string;
-  accessTokenExpiresAt: string;
 };
 
 export type LogoutResponse = {
