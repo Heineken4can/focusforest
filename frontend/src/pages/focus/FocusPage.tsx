@@ -11,6 +11,7 @@ import type { FocusSession } from '@/features/focus/focus.types';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { ROUTES } from '@/lib/constants/routes';
 import { appStore } from '@/stores/app-store';
+import { RewardAnimation } from '@/features/rewards/RewardAnimation';
 
 function formatDuration(totalSeconds: number) {
   const safeSeconds = Math.max(0, totalSeconds);
@@ -131,7 +132,9 @@ export function FocusPage() {
   const focusSnapshot = useSyncExternalStore(focusStore.subscribe, focusStore.getSnapshot, focusStore.getSnapshot);
   const appSnapshot = useSyncExternalStore(appStore.subscribe, appStore.getSnapshot, appStore.getSnapshot);
   const [now, setNow] = useState(() => Date.now());
+  const [showReward, setShowReward] = useState(false);
   const autoActionRef = useRef<string | null>(null);
+  const lastTerminalStatusRef = useRef<string | null>(null);
 
   const isAuthenticated = appSnapshot.isAuthenticated;
   const currentSession = focusSnapshot.activeSession;
@@ -160,6 +163,17 @@ export function FocusPage() {
   }, []);
 
   useEffect(() => {
+    if (focusSnapshot.terminalStatus && focusSnapshot.lastReward) {
+      if (lastTerminalStatusRef.current !== focusSnapshot.terminalStatus) {
+        setShowReward(true);
+        lastTerminalStatusRef.current = focusSnapshot.terminalStatus;
+      }
+    } else {
+      lastTerminalStatusRef.current = null;
+    }
+  }, [focusSnapshot.terminalStatus, focusSnapshot.lastReward]);
+
+  useEffect(() => {
     if (!currentSession) {
       return;
     }
@@ -171,7 +185,7 @@ export function FocusPage() {
     return () => {
       window.clearInterval(timerId);
     };
-  }, [currentSession?.focusSessionId]);
+  }, [currentSession]);
 
   useEffect(() => {
     if (!currentSession || focusSnapshot.isBusy) {
@@ -243,6 +257,14 @@ export function FocusPage() {
 
   return (
     <div className="space-y-6">
+      {showReward && focusSnapshot.lastReward && (
+        <RewardAnimation
+          awardedSp={focusSnapshot.lastReward.awardedSp}
+          awardedTrees={focusSnapshot.lastReward.awardedTrees}
+          onComplete={() => setShowReward(false)}
+        />
+      )}
+
       {focusSnapshot.errorMessage ? (
         <section className="space-y-4">
           <ErrorState title="집중 세션 요청을 처리하지 못했어요" description={focusSnapshot.errorMessage} />

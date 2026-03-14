@@ -13,6 +13,14 @@ type DbClient = PrismaService | Prisma.TransactionClient;
 export class RewardRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
+  get prisma() {
+    return this.prismaService;
+  }
+
+  findTimezoneDirect(userId: string) {
+    return this.findTimezone(this.prismaService, userId);
+  }
+
   findTimezone(
     client: DbClient,
     userId: string,
@@ -143,5 +151,36 @@ export class RewardRepository {
     });
 
     return snapshot?.totalCompletedSessions ?? 0;
+  }
+
+  async findProgressSnapshotOnly(userId: string) {
+    return this.prismaService.userProgressSnapshot.findUnique({
+      where: { userId },
+    });
+  }
+
+  async findDailyFocusStat(userId: string, statDate: Date) {
+    return this.prismaService.dailyFocusStat.findUnique({
+      where: {
+        userId_statDate: {
+          userId,
+          statDate,
+        },
+      },
+    });
+  }
+
+  async findRewardLedger(
+    userId: string,
+    cursor?: string,
+    limit: number = 20,
+  ): Promise<RewardLedger[]> {
+    return this.prismaService.rewardLedger.findMany({
+      where: { userId },
+      take: limit,
+      skip: cursor ? 1 : 0,
+      cursor: cursor ? { id: cursor } : undefined,
+      orderBy: { createdAt: 'desc' },
+    });
   }
 }

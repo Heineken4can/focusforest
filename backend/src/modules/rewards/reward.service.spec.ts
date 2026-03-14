@@ -52,4 +52,39 @@ describe('RewardService', () => {
     });
     expect(result.progressSnapshot.totalCompletedSessions).toBe(10);
   });
+
+  describe('toStatDate', () => {
+    it('calculates statDate correctly for Asia/Seoul (UTC+9)', () => {
+      // 2026-03-14 01:00 UTC is 2026-03-14 10:00 KST
+      const date = new Date('2026-03-14T01:00:00Z');
+      const statDate = service['toStatDate'](date, 'Asia/Seoul');
+      expect(statDate.toISOString()).toBe('2026-03-14T00:00:00.000Z');
+    });
+
+    it('calculates statDate correctly for America/New_York (UTC-5/EDT)', () => {
+      // 2026-03-14 01:00 UTC is 2026-03-13 20:00 EST/EDT
+      const date = new Date('2026-03-14T01:00:00Z');
+      const statDate = service['toStatDate'](date, 'America/New_York');
+      expect(statDate.toISOString()).toBe('2026-03-13T00:00:00.000Z');
+    });
+
+    it('handles day transition correctly for Asia/Seoul', () => {
+      // 2026-03-13 23:00 UTC is 2026-03-14 08:00 KST
+      const date = new Date('2026-03-13T23:00:00Z');
+      const statDate = service['toStatDate'](date, 'Asia/Seoul');
+      expect(statDate.toISOString()).toBe('2026-03-14T00:00:00.000Z');
+    });
+  });
+
+  describe('calculateLevel', () => {
+    it('calculates level 1 for 0-999 SP', () => {
+      expect(service.calculateLevel(0)).toBe(1);
+      expect(service.calculateLevel(999)).toBe(1);
+    });
+
+    it('calculates level 2 for 1000-1999 SP', () => {
+      expect(service.calculateLevel(1000)).toBe(2);
+      expect(service.calculateLevel(1999)).toBe(2);
+    });
+  });
 });

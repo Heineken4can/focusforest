@@ -1,6 +1,7 @@
 import { apiFetch, refreshAccessToken } from '@/lib/api/client';
 
 import type {
+  AuthUser,
   LoginRequest,
   LoginResponse,
   LogoutResponse,
@@ -49,6 +50,19 @@ export function logOut() {
     {
       auth: 'required',
       includeCsrfToken: true,
+    },
+  );
+}
+
+export function updateProfile(payload: { displayName: string }) {
+  return apiFetch<{ user: AuthUser }>(
+    '/profile',
+    {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    },
+    {
+      auth: 'required',
     },
   );
 }

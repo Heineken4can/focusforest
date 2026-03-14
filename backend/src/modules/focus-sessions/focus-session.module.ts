@@ -4,6 +4,7 @@ import { FocusSessionController } from './focus-session.controller';
 import { FocusSessionRepository } from './focus-session.repository';
 import { FocusSessionService } from './focus-session.service';
 import { SessionIdempotencyService } from './session-idempotency.service';
+import { FocusSessionSweeper } from './focus-session.sweeper';
 
 @Module({
   imports: [RewardModule],
@@ -12,7 +13,8 @@ import { SessionIdempotencyService } from './session-idempotency.service';
     FocusSessionRepository,
     FocusSessionService,
     SessionIdempotencyService,
+    FocusSessionSweeper,
   ],
-  exports: [FocusSessionService],
+  exports: [FocusSessionService, FocusSessionRepository],
 })
 export class FocusSessionModule {}

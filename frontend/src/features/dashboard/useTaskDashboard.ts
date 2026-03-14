@@ -22,6 +22,8 @@ import type {
 } from '@/features/dashboard/task.types';
 import { ApiRequestError } from '@/lib/api/client';
 import { appStore, type SessionStatus } from '@/stores/app-store';
+import { getRewardStats } from '@/features/rewards/rewards.api';
+import type { RewardStats } from '@/features/rewards/rewards.types';
 
 type TaskSummaryCard = {
   label: string;
@@ -47,6 +49,7 @@ type UseTaskDashboardResult = {
   draft: TaskDraft;
   isMutating: boolean;
   summaryCards: TaskSummaryCard[];
+  rewardStats: RewardStats | null;
   setFilter: (nextFilter: TaskFilter) => void;
   openCreateDialog: () => void;
   openEditDialog: (taskId: string) => void;
@@ -173,39 +176,58 @@ function validateDraft(draft: TaskDraft) {
   return null;
 }
 
-function buildSummaryCards(tasks: Array<Task & { isLocked: boolean }>): TaskSummaryCard[] {
+function buildSummaryCards(
+  tasks: Array<Task & { isLocked: boolean }>,
+  rewardStats: RewardStats | null
+): TaskSummaryCard[] {
   const pendingTasks = tasks.filter((task) => task.status === 'PENDING');
   const completedTasks = tasks.filter((task) => task.status === 'COMPLETED');
-  const lockedTasks = tasks.filter((task) => task.isLocked);
   const coreTask = tasks.find((task) => task.isCore);
 
-  return [
+  const cards: TaskSummaryCard[] = [
     {
       label: '진행 대기',
       value: `${pendingTasks.length}개`,
       description: '아직 완료하지 않은 과제 수',
     },
     {
-      label: '완료',
+      label: '오늘 완료',
       value: `${completedTasks.length}개`,
       description: '오늘 목록에서 완료로 표시된 과제 수',
     },
-    {
+  ];
+
+  if (rewardStats) {
+    cards.push({
+      label: '누적 SP',
+      value: `${rewardStats.totalSp.toLocaleString()} SP`,
+      description: `Level ${rewardStats.level} 숙련도`,
+    });
+    cards.push({
+      label: '누적 완료',
+      value: `${rewardStats.totalCompletedSessions}회`,
+      description: '전체 기간 동안 완료한 세션 수',
+    });
+  } else {
+    cards.push({
       label: '핵심 과제',
       value: coreTask ? '지정됨' : '없음',
       description: coreTask ? coreTask.title : '가장 중요한 과제를 하나 지정해 보세요.',
-    },
-    {
+    });
+    cards.push({
       label: '잠금',
-      value: `${lockedTasks.length}개`,
+      value: `${tasks.filter((t) => t.isLocked).length}개`,
       description: '진행 중 세션으로 수정이 차단된 과제 수',
-    },
-  ];
+    });
+  }
+
+  return cards;
 }
 
 export function useTaskDashboard(): UseTaskDashboardResult {
   const appSnapshot = useAppSnapshot();
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [rewardStats, setRewardStats] = useState<RewardStats | null>(null);
   const [filter, setFilter] = useState<TaskFilter>('ALL');
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -248,6 +270,7 @@ export function useTaskDashboard(): UseTaskDashboardResult {
         }
 
         setTasks(sortTasks(readLocalModeTasks()));
+        setRewardStats(null);
         setIsLoading(false);
         return;
       }
@@ -258,6 +281,7 @@ export function useTaskDashboard(): UseTaskDashboardResult {
         }
 
         setTasks([]);
+        setRewardStats(null);
         setIsLoading(false);
         return;
       }
@@ -269,14 +293,18 @@ export function useTaskDashboard(): UseTaskDashboardResult {
       }
 
       try {
-        const response = await getTasks();
+        const [tasksResponse, rewardStatsResponse] = await Promise.all([
+          getTasks(),
+          getRewardStats(),
+        ]);
 
         if (!isMounted) {
           return;
         }
 
-        const nextTasks = sortTasks(response.items);
+        const nextTasks = sortTasks(tasksResponse.items);
         setTasks(nextTasks);
+        setRewardStats(rewardStatsResponse.stats);
         writeAuthenticatedTaskCache(currentUserId, nextTasks);
       } catch (error) {
         if (!isMounted) {
@@ -331,7 +359,7 @@ export function useTaskDashboard(): UseTaskDashboardResult {
     }
   }, [filter, tasksWithLock]);
 
-  const summaryCards = useMemo(() => buildSummaryCards(tasksWithLock), [tasksWithLock]);
+  const summaryCards = useMemo(() => buildSummaryCards(tasksWithLock, rewardStats), [tasksWithLock, rewardStats]);
 
   function persistLocalTasks(nextTasks: Task[]) {
     setTasks(nextTasks);
@@ -545,19 +573,26 @@ export function useTaskDashboard(): UseTaskDashboardResult {
 
     if (appSnapshot.localModeFlag) {
       setTasks(sortTasks(readLocalModeTasks()));
+      setRewardStats(null);
       setIsLoading(false);
       return;
     }
 
     if (!currentUserId) {
       setTasks([]);
+      setRewardStats(null);
       setIsLoading(false);
       return;
     }
 
     try {
-      const response = await getTasks();
-      const nextTasks = sortTasks(response.items);
+      const [tasksResponse, rewardStatsResponse] = await Promise.all([
+        getTasks(),
+        getRewardStats(),
+      ]);
+      const nextTasks = sortTasks(tasksResponse.items);
+      setTasks(nextTasks);
+      setRewardStats(rewardStatsResponse.stats);
       persistLocalTasks(nextTasks);
     } catch (error) {
       setLoadError(
@@ -714,6 +749,7 @@ export function useTaskDashboard(): UseTaskDashboardResult {
     draft,
     isMutating,
     summaryCards,
+    rewardStats,
     setFilter,
     openCreateDialog,
     openEditDialog,
@@ -728,4 +764,3 @@ export function useTaskDashboard(): UseTaskDashboardResult {
     clearNotice,
   };
 }
-

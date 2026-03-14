@@ -33,6 +33,10 @@ export type TaskCandidate = {
 export class FocusSessionRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
+  get prisma() {
+    return this.prismaService;
+  }
+
   findTaskForStart(
     client: DbClient,
     userId: string,
@@ -209,6 +213,17 @@ export class FocusSessionRepository {
         userId,
         status: {
           in: COMPLETED_FOCUS_STATUSES,
+        },
+      },
+    });
+  }
+
+  async findTimedOutSessions(now: Date) {
+    return this.prismaService.focusSession.findMany({
+      where: {
+        status: SessionStatus.PAUSED,
+        pauseDeadlineAt: {
+          lt: now,
         },
       },
     });

@@ -185,8 +185,33 @@ const rewardLedgers = [
 ] as const;
 
 const dailyFocusStats = [
+  // User 1 - Last 7 days (including some zero days)
   {
     id: '91111111-1111-4111-8111-111111111111',
+    userId: users[0].id,
+    statDate: new Date('2026-03-08'),
+    focusedSeconds: 3600,
+    completedSessions: 2,
+    plantedTrees: 2,
+  },
+  {
+    id: '91111111-1111-4111-8111-111111111112',
+    userId: users[0].id,
+    statDate: new Date('2026-03-09'),
+    focusedSeconds: 1800,
+    completedSessions: 1,
+    plantedTrees: 1,
+  },
+  {
+    id: '91111111-1111-4111-8111-111111111113',
+    userId: users[0].id,
+    statDate: new Date('2026-03-10'),
+    focusedSeconds: 5400,
+    completedSessions: 3,
+    plantedTrees: 3,
+  },
+  {
+    id: '91111111-1111-4111-8111-111111111114',
     userId: users[0].id,
     statDate: new Date('2026-03-11'),
     focusedSeconds: 1500,
@@ -194,13 +219,30 @@ const dailyFocusStats = [
     plantedTrees: 1,
   },
   {
-    id: '91111111-1111-4111-8111-111111111112',
+    id: '91111111-1111-4111-8111-111111111115',
     userId: users[0].id,
     statDate: new Date('2026-03-12'),
     focusedSeconds: 0,
     completedSessions: 0,
     plantedTrees: 0,
   },
+  {
+    id: '91111111-1111-4111-8111-111111111116',
+    userId: users[0].id,
+    statDate: new Date('2026-03-13'),
+    focusedSeconds: 7200,
+    completedSessions: 4,
+    plantedTrees: 4,
+  },
+  {
+    id: '91111111-1111-4111-8111-111111111117',
+    userId: users[0].id,
+    statDate: new Date('2026-03-14'),
+    focusedSeconds: 2400,
+    completedSessions: 1,
+    plantedTrees: 1,
+  },
+  // User 2 - Some stats
   {
     id: '92222222-2222-4222-8222-222222222221',
     userId: users[1].id,
@@ -215,9 +257,9 @@ const progressSnapshots = [
   {
     id: 'a1111111-1111-4111-8111-111111111111',
     userId: users[0].id,
-    totalSp: 50,
-    currentLevel: 1,
-    totalCompletedSessions: 1,
+    totalSp: 1550,
+    currentLevel: 2,
+    totalCompletedSessions: 15,
   },
   {
     id: 'a2222222-2222-4222-8222-222222222222',
@@ -251,6 +293,17 @@ const metricEvents = [
     occurredAt: new Date('2026-03-13T00:00:00.000Z'),
     payload: { source: 'seed' },
   },
+  {
+    eventId: 'b3333333-3333-4333-8333-333333333333',
+    userId: users[1].id,
+    focusSessionClientGeneratedId: focusSessions[2].clientGeneratedId,
+    rewardLedgerSeedId: rewardLedgers[1].id,
+    deviceId: 'seed-device-user-2',
+    eventName: MetricEventName.FOCUS_SESSION_COMPLETED,
+    dedupeKey: 'focus-session-completed-user-2',
+    occurredAt: new Date('2026-03-10T03:30:05.000Z'),
+    payload: { source: 'seed' },
+  },
 ] as const;
 
 const syncCursors = [
@@ -265,6 +318,12 @@ const syncCursors = [
     userId: users[1].id,
     deviceId: 'seed-device-user-2',
     lastCursor: 'cursor-user-2',
+  },
+  {
+    id: 'c3333333-3333-4333-8333-333333333333',
+    userId: users[0].id,
+    deviceId: 'seed-device-other-1',
+    lastCursor: 'cursor-user-1-other',
   },
 ] as const;
 
@@ -380,8 +439,8 @@ async function main() {
   for (const snapshot of progressSnapshots) {
     await prisma.userProgressSnapshot.upsert({
       where: { userId: snapshot.userId },
-      update: snapshot,
-      create: snapshot,
+      update: stripId(snapshot),
+      create: stripId(snapshot),
     });
   }
 
@@ -393,8 +452,8 @@ async function main() {
           statDate: stat.statDate,
         },
       },
-      update: stat,
-      create: stat,
+      update: stripId(stat),
+      create: stripId(stat),
     });
   }
 
@@ -409,16 +468,8 @@ async function main() {
 
     await prisma.productMetricEvent.upsert({
       where: { eventId: metric.eventId },
-      update: {
-        ...metricWithoutRefs,
-        focusSessionId,
-        rewardLedgerId,
-      },
-      create: {
-        ...metricWithoutRefs,
-        focusSessionId,
-        rewardLedgerId,
-      },
+      update: metricWithoutRefs,
+      create: metricWithoutRefs,
     });
   }
 
@@ -430,8 +481,8 @@ async function main() {
           deviceId: cursor.deviceId,
         },
       },
-      update: cursor,
-      create: cursor,
+      update: stripId(cursor),
+      create: stripId(cursor),
     });
   }
 }

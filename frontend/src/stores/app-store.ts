@@ -25,6 +25,10 @@ export type AppStoreSnapshot = {
   accessTokenExpiresAt: string | null;
   currentUser: AuthUser | null;
   bootstrapStatus: BootstrapStatus;
+  currentBatch: number;
+  totalBatches: number;
+  lastConflict: { type: string; id: string; occurredAt: string } | null;
+  syncError: string | null;
 };
 
 const ACTIVE_SESSION_STORAGE_KEY = 'focus-forest.active-session.v1';
@@ -124,6 +128,10 @@ function createInitialSnapshot(): AppStoreSnapshot {
     accessTokenExpiresAt: null,
     currentUser: null,
     bootstrapStatus: 'idle',
+    currentBatch: 0,
+    totalBatches: 0,
+    lastConflict: null,
+    syncError: null,
   };
 }
 
@@ -152,6 +160,10 @@ function getClearedSessionSnapshot(params: { localModeFlag: boolean }): AppStore
     accessTokenExpiresAt: null,
     currentUser: null,
     bootstrapStatus: 'idle',
+    currentBatch: 0,
+    totalBatches: 0,
+    lastConflict: null,
+    syncError: null,
   };
 }
 
@@ -194,6 +206,12 @@ export const appStore = {
       connectionState: 'ONLINE',
       accessToken: nextToken.accessToken,
       accessTokenExpiresAt: nextToken.accessTokenExpiresAt,
+    });
+  },
+  updateCurrentUser(user: AuthUser) {
+    commitSnapshot({
+      ...snapshot,
+      currentUser: user,
     });
   },
   setActiveTaskSession(nextSession: {

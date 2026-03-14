@@ -5,6 +5,7 @@ import {
   RequestMethod,
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import configuration from './common/config/configuration';
 import { validateEnv } from './common/config/env.validation';
 import { AppLoggerService } from './common/logger/app-logger.service';
@@ -16,7 +17,10 @@ import { RedisModule } from './common/redis/redis.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { FocusSessionModule } from './modules/focus-sessions/focus-session.module';
 import { HealthModule } from './modules/health/health.module';
+import { MetricsModule } from './modules/metrics/metrics.module';
 import { RewardModule } from './modules/rewards/reward.module';
+import { ProfileModule } from './modules/profile/profile.module';
+import { SyncModule } from './modules/sync/sync.module';
 import { TaskModule } from './modules/tasks/task.module';
 
 @Module({
@@ -28,11 +32,15 @@ import { TaskModule } from './modules/tasks/task.module';
       load: [configuration],
       validate: validateEnv,
     }),
+    ScheduleModule.forRoot(),
     PrismaModule,
     RedisModule,
     AuthModule,
     TaskModule,
     RewardModule,
+    ProfileModule,
+    SyncModule,
+    MetricsModule,
     FocusSessionModule,
     HealthModule,
   ],

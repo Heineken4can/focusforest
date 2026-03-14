@@ -193,7 +193,6 @@ model ProductMetricEvent {
   @@index([eventName, occurredAt(sort: Desc)], map: "idx_metric_event_name_occurred")
   @@index([userId, occurredAt(sort: Desc)], map: "idx_metric_event_user_occurred")
   @@index([deviceId, occurredAt(sort: Desc)], map: "idx_metric_event_device_occurred")
-  @@unique([eventName, dedupeKey], map: "uq_metric_event_name_dedupe_key")
 }
 
 model SyncCursor {

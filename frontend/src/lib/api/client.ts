@@ -16,7 +16,7 @@ type ApiErrorResponse = {
   meta?: Record<string, unknown>;
 };
 
-type ApiRequestOptions = {
+export type ApiRequestOptions = {
   auth?: 'required' | 'optional' | 'none';
   includeCsrfToken?: boolean;
   retryOn401?: boolean;

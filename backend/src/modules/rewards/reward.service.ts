@@ -103,6 +103,54 @@ export class RewardService {
     };
   }
 
+  async getStats(userId: string) {
+    const timezoneRecord = await this.rewardRepository.findTimezoneDirect(userId);
+    const timezone = timezoneRecord?.timezone ?? DEFAULT_TIMEZONE;
+    const statDate = this.toStatDate(new Date(), timezone);
+
+    const [dailyStat, progress] = await Promise.all([
+      this.rewardRepository.findDailyFocusStat(userId, statDate),
+      this.rewardRepository.findProgressSnapshotOnly(userId),
+    ]);
+
+    return {
+      today: {
+        statDate: statDate.toISOString().slice(0, 10),
+        completedSessions: dailyStat?.completedSessions ?? 0,
+        plantedTrees: dailyStat?.plantedTrees ?? 0,
+        focusedSeconds: dailyStat?.focusedSeconds ?? 0,
+      },
+      progress: {
+        totalSp: progress?.totalSp ?? 0,
+        level: progress?.currentLevel ?? 1,
+        totalCompletedSessions: progress?.totalCompletedSessions ?? 0,
+      },
+    };
+  }
+
+  async getLedger(userId: string, cursor?: string, limit: number = 20) {
+    const items = await this.rewardRepository.findRewardLedger(
+      userId,
+      cursor,
+      limit,
+    );
+    const nextCursor =
+      items.length === limit ? items[items.length - 1].id : undefined;
+
+    return {
+      items: items.map((item) => ({
+        id: item.id,
+        sourceSessionId: item.sourceSessionId,
+        spAmount: item.spAmount,
+        treeCount: item.treeCount,
+        createdAt: item.createdAt,
+      })),
+      meta: {
+        nextCursor,
+      },
+    };
+  }
+
   async getCompletedSessionCount(userId: string): Promise<number> {
     return this.rewardRepository.getCompletedSessionCount(userId);
   }
